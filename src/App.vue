@@ -4,6 +4,7 @@ import TotalOrders from "./components/TotalOrders.vue";
 import PlatformConstants from './platformConstants';
 import Vue from 'vue'
 import VueMaterial from 'vue-material'
+import axios from 'axios'
 import 'vue-material/dist/vue-material.min.css'
 
 Vue.use(VueMaterial)
@@ -22,8 +23,18 @@ export default {
         {platform: 'ebay', quantity: 3},
         {platform: 'woo', quantity: 6},
       ],
-      quantity: 6
+      response: '1'
     }
+  },
+  methods: {
+    calculateTotal: function () {
+      return this.platforms.reduce((sum, item) => { return sum + item.quantity}, 0);
+    }
+  },
+  mounted () {
+    axios
+      .get('https://api.coindesk.com/v1/bpi/currentprice.json')
+      .then(response => (this.response = response.data))
   }
 };
 </script>
@@ -35,13 +46,10 @@ export default {
     </nav>
     <main class="orderQuantityContainer">
       <div class="md-layout md-gutter md-alignment-center">
-        <TotalOrders :quantity=quantity />
+        <TotalOrders :quantity=calculateTotal() />
         <OrderQuantity v-for="item in platforms" :platform="item.platform" :quantity="item.quantity" />
       </div>
-      <!-- <span v-for="item in platforms">
-        {{v-bind:qty="item.qty"}}
-      </span> -->
-
+      <div>{{response}}</div>
 
     </main>
   </div>

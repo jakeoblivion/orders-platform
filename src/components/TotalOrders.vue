@@ -25,9 +25,11 @@ export default {
 <style scoped>
 .orderQuantityContainer {
   margin-top: 8px;
+  padding: 12px;
 }
 
 .orderQuantityNumber {
   font-size: 40px;
+  padding-top:5px;
 }
 </style>
