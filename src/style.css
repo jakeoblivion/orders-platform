@@ -1,5 +1,5 @@
 * {
-  box-sizing: content-box;
+  box-sizing: border-box;
 }
 
 body {
@@ -20,6 +20,6 @@ body {
   max-width: 100%;
 }
 
-.mainContainer {
+main {
   padding: 8px;
 }

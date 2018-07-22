@@ -1,10 +1,12 @@
 <template>
-  <div class="orderQuantity">
-    <h1>{{ platform }}</h1>
+  <div class="orderQuantityContainer">
+    <div class="orderQuantity">
+    <img class="platformLogo" src="../assets/ebay-logo.jpg">
     <p>
       {{ quantity }}
     </p>
   </div>
+</div>
 </template>
 
 <script>
@@ -18,8 +20,18 @@ export default {
 </script>
 
 <style scoped>
-.orderQuantity {
+.orderQuantityContainer {
   display: inline-block;
   width: 25%;
+  padding: 15px;
+}
+.orderQuantity {
+  border: solid 1px grey;
+}
+
+.platformLogo {
+  width: 100px;
+  padding: 5px;
+  max-width: 100%;
 }
 </style>
