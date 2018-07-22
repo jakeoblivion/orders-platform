@@ -1,28 +1,24 @@
-<template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
-</template>
-
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import OrderQuantity from "./components/OrderQuantity.vue";
 
 export default {
   name: "app",
   components: {
-    HelloWorld
+    OrderQuantity
   }
 };
 </script>
 
-<style>
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<template>
+  <div id="app">
+    <nav class="logoContainer">
+      <img class="logo" src="./assets/logo.jpg">
+    </nav>
+    <main class="orderQuantityContainer">
+      <OrderQuantity type="Ebay"/>
+      <OrderQuantity type="Etsy"/>
+      <OrderQuantity type="Woo"/>
+      <TotalOrders
+    </main>
+  </div>
+</template>
