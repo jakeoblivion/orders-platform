@@ -1,12 +1,19 @@
+
 <template>
-  <div class="orderQuantityContainer">
-    <div class="orderQuantity">
-    <img class="platformLogo" src="../assets/ebay-logo.jpg">
-    <p>
-      {{ quantity }}
-    </p>
+    <div class="md-layout-item md-medium-size-25 md-small-size-50 md-xsmall-size-50">
+    <md-card class="orderQuantityContainer center whitebg">
+      <md-card-header>
+        <div class="md-title">
+          <img v-if="platform === 'ebay'" class="platformLogo" src='../assets/ebay-logo.jpg'>
+          <img v-if="platform === 'etsy'" class="platformLogo" src='../assets/etsy-logo.jpg'>
+          <img v-if="platform === 'woo'" class="platformLogo" src='../assets/woo-logo.jpg'>
+        </div>
+      </md-card-header>
+      <md-card-content class=orderQuantityNumber>
+        {{ quantity }}
+      </md-card-content>
+    </md-card>
   </div>
-</div>
 </template>
 
 <script>
@@ -14,19 +21,18 @@ export default {
   name: "OrderQuantity",
   props: {
     platform: String,
-    quantity: String
+    quantity: Number
   }
 };
 </script>
 
 <style scoped>
 .orderQuantityContainer {
-  display: inline-block;
-  width: 25%;
-  padding: 15px;
+  margin-top: 8px;
 }
-.orderQuantity {
-  border: solid 1px grey;
+
+.orderQuantityNumber {
+  font-size: 40px;
 }
 
 .platformLogo {

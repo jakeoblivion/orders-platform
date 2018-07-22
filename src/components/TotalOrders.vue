@@ -1,9 +1,15 @@
 <template>
-  <div class="totalOrders">
-    <h1>Total Orders</h1>
-    <p>
-      {{ quantity }}
-    </p>
+  <div class="md-layout-item md-medium-size-25 md-small-size-50 md-xsmall-size-50">
+    <md-card class="orderQuantityContainer center primaryBackground">
+      <md-card-header>
+        <div class="md-title">
+          Total Orders
+        </div>
+      </md-card-header>
+      <md-card-content class=orderQuantityNumber>
+        {{ quantity }}
+      </md-card-content>
+    </md-card>
   </div>
 </template>
 
@@ -11,14 +17,17 @@
 export default {
   name: "TotalOrders",
   props: {
-    quantity: String
+    quantity: Number
   }
 };
 </script>
 
 <style scoped>
-.totalOrders {
-  display: inline-block;
-  width: 25%;
+.orderQuantityContainer {
+  margin-top: 8px;
+}
+
+.orderQuantityNumber {
+  font-size: 40px;
 }
 </style>
