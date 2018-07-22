@@ -1,0 +1,25 @@
+* {
+  box-sizing: content-box;
+}
+
+body {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.logoContainer {
+  padding: 12px;
+  text-align: center;
+  border-bottom: solid 1px rgba(0,0,0,0.06)
+}
+.logo {
+  width: 500px;
+  max-width: 100%;
+}
+
+.mainContainer {
+  padding: 8px;
+}
