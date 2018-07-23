@@ -10,11 +10,15 @@ import 'vue-material/dist/vue-material.min.css'
 Vue.use(VueMaterial)
 
 export default {
-  //props: {quantity: 123},
   name: "app",
   components: {
     OrderQuantity,
     TotalOrders
+  },
+  methods: {
+    calculateTotal() {
+      return this.platforms.reduce((sum, item) => { return sum + item.quantity}, 0);
+    }
   },
   data() {
     return {
@@ -23,18 +27,14 @@ export default {
         {platform: 'ebay', quantity: 3},
         {platform: 'woo', quantity: 6},
       ],
-      response: '1'
+      response: null
     }
   },
-  methods: {
-    calculateTotal: function () {
-      return this.platforms.reduce((sum, item) => { return sum + item.quantity}, 0);
-    }
-  },
-  mounted () {
+  mounted() {
     axios
-      .get('https://api.coindesk.com/v1/bpi/currentprice.json')
-      .then(response => (this.response = response.data))
+      .get('http://localhost:3000/get-orders')
+      .then(response => this.response = response.data)
+      .catch(err => console.log(err))
   }
 };
 </script>
@@ -50,7 +50,6 @@ export default {
         <OrderQuantity v-for="item in platforms" :platform="item.platform" :quantity="item.quantity" />
       </div>
       <div>{{response}}</div>
-
     </main>
   </div>
 </template>
