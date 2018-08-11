@@ -7,8 +7,11 @@ import (
 	"os"
 )
 
-func ApiCallGet(url string, authorization string ) []byte {
-	response, err := http.Get(url)
+func ApiCallGet(url string, token string ) []byte {
+	client := &http.Client{}
+	request, err := http.NewRequest("GET", url, nil)
+	request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", token))
+	response, err := client.Do(request)
 
 	if err != nil {
 			fmt.Printf("%s", err)

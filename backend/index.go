@@ -17,5 +17,7 @@ func GetOrders(w http.ResponseWriter, req *http.Request) {
 }
 
 func fetchEbayOrders() []byte {
-	return ApiCallGet("https://jsonplaceholder.typicode.com/posts/1", "")
+	ebayGetOrdersUrl := "https://api.ebay.com/sell/fulfillment/v1/order?filter=orderfulfillmentstatus:%7BNOT_STARTED%7CIN_PROGRESS%7D"
+	ebayToken := ""
+	return ApiCallGet(ebayGetOrdersUrl, ebayToken)
 }
