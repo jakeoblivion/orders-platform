@@ -6,6 +6,14 @@ import (
 	"net/http"
 )
 
+type Order struct {
+	Id string `json:"id"`
+}
+
+var ebayToken string
+
+//var orders []Order
+
 func main() {
 	http.HandleFunc("/get-orders", GetOrders)
 	log.Fatal(http.ListenAndServe(":3001", nil))
@@ -13,18 +21,19 @@ func main() {
 
 func GetOrders(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080")
-	//orders := fetchEbayOrders(fetchEbayToken())
-	orders := fetchEbayItemImage("273258129797", fetchEbayToken())
+	ebayToken = fetchEbayToken()
+	orders := fetchEbayOrders()
+	//orders := fetchEbayItemImage("273258129797")
 	w.Write(orders)
 }
 
-func fetchEbayOrders(ebayToken string) []byte {
-	headers :=  map[string]string{"Authorization": fmt.Sprintf("Bearer %s", ebayToken)}
+func fetchEbayOrders() []byte {
+	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", ebayToken)}
 	return ApiCallGet("https://api.ebay.com/sell/fulfillment/v1/order?filter=orderfulfillmentstatus:%7BNOT_STARTED%7CIN_PROGRESS%7D", headers)
 }
 
-func fetchEbayItemImage(itemId string, ebayToken string) []byte {
-	headers :=  map[string]string{"Authorization": fmt.Sprintf("Bearer %s", ebayToken)}
+func fetchEbayItemImage(itemId string) []byte {
+	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", ebayToken)}
 	return ApiCallGet(fmt.Sprintf("https://api.ebay.com/buy/browse/v1/item/v1|%s|0", itemId), headers)
 }
 
