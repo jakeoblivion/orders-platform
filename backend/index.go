@@ -53,6 +53,26 @@ type EbayOrders struct {
 	} `json:"orders"`
 }
 
+type Order struct {
+	OrderTotal string
+	OrderItems []struct {
+		ItemName  string
+		ImageUrl  string
+		ItemPrice string
+	}
+	OrderDate    string
+	ShipByDate   string
+	ShippingInfo struct {
+		Name            string
+		ShippingAddress struct {
+			AddressLine string
+			City        string
+			PostalCode  string
+			Country     string
+		}
+	}
+}
+
 func main() {
 	http.HandleFunc("/get-orders", GetOrders)
 	log.Fatal(http.ListenAndServe(":3001", nil))
@@ -72,6 +92,7 @@ func fetchEbayOrders() []byte {
 	response := ApiCallGet("https://api.ebay.com/sell/fulfillment/v1/order?filter=orderfulfillmentstatus:%7BNOT_STARTED%7CIN_PROGRESS%7D", headers)
 
 	var ebayOrders EbayOrders
+
 	err := json.Unmarshal(response, &ebayOrders)
 	if err != nil {
 		fmt.Println("There was an error UNMARSHALLING:", err)
@@ -82,6 +103,7 @@ func fetchEbayOrders() []byte {
 	if err2 != nil {
 		fmt.Println("There was an error MARSHALLING:", err)
 	}
+	fmt.Println("\n\n Ebay Orders stringfied:", string(ebayOrdersByte))
 
 	return ebayOrdersByte
 }
