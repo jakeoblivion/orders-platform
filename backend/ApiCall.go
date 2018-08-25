@@ -1,11 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
-	"bytes"
 )
 
 func ApiCall(method string, url string, body []byte, headers map[string]string) []byte {
