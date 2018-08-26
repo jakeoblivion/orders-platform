@@ -1,7 +1,7 @@
 
 <template>
     <div class="md-layout-item md-medium-size-25 md-small-size-50 md-xsmall-size-50">
-    <md-card class="orderQuantityContainer center whitebg">
+    <md-card class="orderQuantityContainer center greybg">
       <md-card-header>
         <div class="md-title">
           <img v-if="platform === 'ebay'" class="platformLogo" src='../assets/ebay-logo.jpg'>

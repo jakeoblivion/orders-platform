@@ -30,6 +30,6 @@ export default {
 
 .orderQuantityNumber {
   font-size: 40px;
-  padding-top:5px;
+  padding-top: 5px;
 }
 </style>

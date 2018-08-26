@@ -11,6 +11,11 @@ body {
   background: #fbfbfb;
 }
 
+.md-layout.md-gutter>.md-layout-item {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
 .logoContainer {
   padding: 12px;
   background: white;
@@ -26,6 +31,10 @@ body {
   background: white;
 }
 
+.greybg {
+  background: #f2f2f2;
+}
+
 .primaryBackground {
   background: #9bb5ac;
 }
@@ -36,4 +45,19 @@ body {
 
 main {
   padding: 16px 32px;
+}
+
+hr {
+  margin: 20px 0;
+}
+
+.p0 {
+  padding: 0 !important;
+}
+
+.ordersHeading {
+  text-align: center;
+  font-size: 37px;
+  border-bottom: solid 2px #cacaca;
+  padding-bottom: 16px;
 }
