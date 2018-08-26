@@ -53,24 +53,70 @@ type EbayOrders struct {
 	} `json:"orders"`
 }
 
+type Orders struct {
+	Orders []Order
+}
+
 type Order struct {
-	OrderTotal string
-	OrderItems []struct {
-		ItemName  string
-		ImageUrl  string
-		ItemPrice string
-	}
-	OrderDate    string
-	ShipByDate   string
-	ShippingInfo struct {
-		Name            string
-		ShippingAddress struct {
-			AddressLine string
-			City        string
-			PostalCode  string
-			Country     string
-		}
-	}
+	OrderItems      []OrderItem
+	OrderDate       string
+	OrderTotal      string
+	ShipByDate      string
+	ShippingAddress ShippingAddress
+	Platform        string
+}
+
+type OrderItem struct {
+	ItemName  string
+	ImageUrl  string
+	ItemPrice string
+}
+
+type ShippingAddress struct {
+	Name        string
+	AddressLine string
+	City        string
+	PostCode    string
+	Country     string
+}
+
+var mockedEbayOrders = Orders{Orders: []Order{
+	{OrderItems: []OrderItem{
+		{
+			ItemName:  "Butterfly Frame",
+			ImageUrl:  "https://i.ebayimg.com/00/s/MTYwMFgxNjAw/z/w58AAOSw6CJbFG32/$_1.JPG",
+			ItemPrice: "99.99"},
+	},
+		OrderDate:  "2018-08-22T01:34:06Z",
+		OrderTotal: "99.99",
+		ShipByDate: "2018-08-24T01:34:06Z",
+		ShippingAddress: ShippingAddress{
+			Name:        "John Smith",
+			AddressLine: "3 Ellen Street",
+			City:        "Runcorn",
+			PostCode:    "SW17TQ",
+			Country:     "UK",
+		},
+		Platform: "ebay",
+	},
+	{OrderItems: []OrderItem{
+		{
+			ItemName:  "Moth Frame",
+			ImageUrl:  "https://www.taxidermyart.co.uk/wp-content/uploads/2015/08/Atlas-Moth-300x285.jpg",
+			ItemPrice: "89.99"},
+	},
+		OrderDate:  "2018-08-22T01:34:06Z",
+		OrderTotal: "89.99",
+		ShipByDate: "2018-08-24T01:34:06Z",
+		ShippingAddress: ShippingAddress{
+			Name:        "Jane Doe",
+			AddressLine: "8 Ellen Street",
+			City:        "Acherfield",
+			PostCode:    "CR4 1GB",
+			Country:     "UK",
+		},
+		Platform: "etsy",
+	}},
 }
 
 func main() {
@@ -81,10 +127,12 @@ func main() {
 func GetOrders(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080")
 	w.Header().Set("content-type", "application/json")
-	ebayOrders := fetchEbayOrders()
-	//orders := fetchEbayItemImage("273258129797")
+	//ebayOrders := fetchEbayOrders()
+	//ebayItemImage := fetchEbayItemImage("273258129797")xa
 
-	w.Write(ebayOrders)
+	fmt.Println("MOCKED ORDERS: ", mockedEbayOrders)
+	orders, _ := json.Marshal(mockedEbayOrders)
+	w.Write(orders)
 }
 
 func fetchEbayOrders() []byte {
