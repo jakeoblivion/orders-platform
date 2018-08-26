@@ -54,42 +54,42 @@ type EbayOrders struct {
 }
 
 type Orders struct {
-	Orders []Order
+	Orders []Order `json:"orders"`
 }
 
 type Order struct {
-	OrderItems      []OrderItem
-	OrderDate       string
-	OrderTotal      string
-	ShipByDate      string
-	ShippingAddress ShippingAddress
-	Platform        string
+	OrderItems      []OrderItem     `json:"orderItems"`
+	OrderDate       string          `json:"orderDate"`
+	OrderTotal      string          `json:"orderTotal"`
+	ShipByDate      string          `json:"shipByDate"`
+	ShippingAddress ShippingAddress `json:"shippingAddress"`
+	Platform        string          `json:"platform"`
 }
 
 type OrderItem struct {
-	ItemName  string
-	ImageUrl  string
-	ItemPrice string
+	ItemName  string `json:"itemName"`
+	ImageUrl  string `json:"imageUrl"`
+	ItemPrice string `json:"itemPrice"`
 }
 
 type ShippingAddress struct {
-	Name        string
-	AddressLine string
-	City        string
-	PostCode    string
-	Country     string
+	Name        string `json:"name"`
+	AddressLine string `json:"addressLine"`
+	City        string `json:"city"`
+	PostCode    string `json:"postCode"`
+	Country     string `json:"country"`
 }
 
 var mockedEbayOrders = Orders{Orders: []Order{
 	{OrderItems: []OrderItem{
 		{
-			ItemName:  "Butterfly Frame",
+			ItemName:  "REAL King Swallowtail in Frame UK - Yellow, Butterfly, Entomology, Taxidermy",
 			ImageUrl:  "https://i.ebayimg.com/00/s/MTYwMFgxNjAw/z/w58AAOSw6CJbFG32/$_1.JPG",
 			ItemPrice: "99.99"},
 	},
-		OrderDate:  "2018-08-22T01:34:06Z",
+		OrderDate:  "2000-08-22T01:34:06Z",
 		OrderTotal: "99.99",
-		ShipByDate: "2018-08-24T01:34:06Z",
+		ShipByDate: "2000-08-24T01:34:06Z",
 		ShippingAddress: ShippingAddress{
 			Name:        "John Smith",
 			AddressLine: "3 Ellen Street",
@@ -101,13 +101,13 @@ var mockedEbayOrders = Orders{Orders: []Order{
 	},
 	{OrderItems: []OrderItem{
 		{
-			ItemName:  "Moth Frame",
+			ItemName:  "Atlas Moth in Frame (Attacus atlas)",
 			ImageUrl:  "https://www.taxidermyart.co.uk/wp-content/uploads/2015/08/Atlas-Moth-300x285.jpg",
 			ItemPrice: "89.99"},
 	},
 		OrderDate:  "2018-08-22T01:34:06Z",
 		OrderTotal: "89.99",
-		ShipByDate: "2018-08-24T01:34:06Z",
+		ShipByDate: "2018-08-27T01:34:06Z",
 		ShippingAddress: ShippingAddress{
 			Name:        "Jane Doe",
 			AddressLine: "8 Ellen Street",
@@ -145,13 +145,13 @@ func fetchEbayOrders() []byte {
 	if err != nil {
 		fmt.Println("There was an error UNMARSHALLING:", err)
 	}
-	fmt.Printf("\n\n Ebay Orders Struct: %+v", ebayOrders)
+	//fmt.Printf("\n\n Ebay Orders Struct: %+v", ebayOrders)
 
 	ebayOrdersByte, err2 := json.Marshal(ebayOrders)
 	if err2 != nil {
 		fmt.Println("There was an error MARSHALLING:", err)
 	}
-	fmt.Println("\n\n Ebay Orders stringfied:", string(ebayOrdersByte))
+	//fmt.Println("\n\n Ebay Orders stringfied:", string(ebayOrdersByte))
 
 	return ebayOrdersByte
 }
