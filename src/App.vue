@@ -3,6 +3,7 @@
 import OrderQuantity from "./components/OrderQuantity.vue";
 import TotalOrders from "./components/TotalOrders.vue";
 import Order from "./components/Order.vue";
+import ShippingOptions from "./components/ShippingOptions.vue";
 import PlatformConstants from "./platformConstants";
 import Vue from "vue";
 import VueMaterial from "vue-material";
@@ -18,7 +19,8 @@ export default {
   components: {
     OrderQuantity,
     TotalOrders,
-    Order
+    Order,
+    ShippingOptions,
   },
   methods: {
     calculateTotalOrders() {
@@ -75,6 +77,8 @@ export default {
       <div class="ordersContainer md-layout md-gutter">
         <Order :class="[{'hidden': platforms.find(item => item.platform === order.platform).hidden}]" v-for="order in orders" :orderDetails="order" />
       </div>
+      <ShippingOptions v-if="orders.length > 0" />
+
     </main>
   </div>
 </template>
