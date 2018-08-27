@@ -21,20 +21,35 @@ export default {
     Order
   },
   methods: {
-    calculateTotal() {
-      return this.platforms.reduce((sum, item) => {
-        return sum + item.quantity;
+    calculateTotalOrders() {
+      return this.orders.reduce(sum => {
+        return ++sum;
       }, 0);
+    },
+    getOrderQuantityForPlatform(platform) {
+      return this.orders.reduce((sum, order) => {
+        return order.platform === platform ? ++sum : sum;
+      }, 0);
+    },
+    hidePlatformOrders(platformClicked) {
+      this.platforms.map(item => {
+        item.platform === platformClicked ? item.hidden = false : item.hidden = true
+      })
+    },
+    showAllOrders() {
+      this.platforms.map(item => {
+        item.hidden = false
+      })
     }
   },
   data() {
     return {
       platforms: [
-        { platform: "etsy", quantity: 1 },
-        { platform: "ebay", quantity: 3 },
-        { platform: "woo", quantity: 6 }
+        { hidden: false, platform: PlatformConstants.ETSY},
+        { hidden: false, platform: PlatformConstants.EBAY},
+        { hidden: false, platform: PlatformConstants.WOO },
       ],
-      orders: []
+      orders: [],
     };
   },
   mounted() {
@@ -53,12 +68,12 @@ export default {
     </nav>
     <main>
       <div class="orderQuantityContainer md-layout md-gutter md-alignment-center">
-        <TotalOrders :quantity=calculateTotal() />
-        <OrderQuantity v-for="item in platforms" :platform="item.platform" :quantity="item.quantity" />
+        <TotalOrders @click.native=showAllOrders :quantity=calculateTotalOrders() />
+        <OrderQuantity @click.native=hidePlatformOrders(item.platform) v-for="item in platforms" :platform="item.platform" :quantity=getOrderQuantityForPlatform(item.platform) />
       </div>
       <h1 class="ordersHeading">ORDERS</h1>
       <div class="ordersContainer md-layout md-gutter">
-        <Order v-for="order in orders" :orderDetails="order" />
+        <Order :class="[{'hidden': platforms.find(item => item.platform === order.platform).hidden}]" v-for="order in orders" :orderDetails="order" />
       </div>
     </main>
   </div>

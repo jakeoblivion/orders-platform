@@ -1,12 +1,10 @@
 
 <template>
     <div class="md-layout-item md-medium-size-25 md-small-size-50 md-xsmall-size-50">
-    <md-card class="orderQuantityContainer center greybg">
+    <md-card class="orderQuantityContainer center greybg cursor">
       <md-card-header>
         <div class="md-title">
-          <img v-if="platform === 'ebay'" class="platformLogo" src='../assets/ebay-logo.jpg'>
-          <img v-if="platform === 'etsy'" class="platformLogo" src='../assets/etsy-logo.jpg'>
-          <img v-if="platform === 'woo'" class="platformLogo" src='../assets/woo-logo.jpg'>
+          <img class="platformLogo" :src="'/static/'+platform+'-logo.png'" >
         </div>
       </md-card-header>
       <md-card-content class=orderQuantityNumber>
@@ -22,7 +20,7 @@ export default {
   props: {
     platform: String,
     quantity: Number
-  }
+  },
 };
 </script>
 

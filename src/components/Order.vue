@@ -1,6 +1,6 @@
 <template xmlns:src="http://www.w3.org/1999/xhtml">
-  <div class="orderContainer md-layout-item md-small-size-100">
-    <md-card class="">
+  <div class="order md-layout-item md-large-size-50 md-medium-size-50 md-small-size-100" v-bind:class=orderDetails.platform>
+    <md-card class="lightgreybg">
       <md-card-content class="md-layout p0">
         <div class="md-layout-item md-size-66">
           <div class="md-layout" v-for="orderItem of orderDetails.orderItems">
@@ -19,7 +19,7 @@
 
         <div class="md-layout-item md-size-33 shippingAddress">
             <div class="platformImg">
-              <img :src="'/static/'+orderDetails.platform+'-logo.jpg'" />
+              <img :src="'/static/'+orderDetails.platform+'-logo.png'" />
               <span class="total">£{{orderDetails.orderTotal}}</span>
             </div>
 
@@ -43,7 +43,7 @@ export default {
   methods: {
     isOverdue: function (date) {
       return new Date(date) < new Date()
-    }
+    },
   }
 }
 
@@ -51,7 +51,7 @@ export default {
 </script>
 
 <style scoped>
-    .orderContainer {
+    .order {
         padding-top: 8px;
         padding-bottom: 8px;
     }
@@ -101,6 +101,7 @@ export default {
 
 .orderItemImg {
   width: 100%;
+    max-width: 180px;
 }
 
 .orderContent {

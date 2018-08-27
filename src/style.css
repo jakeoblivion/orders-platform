@@ -8,7 +8,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   margin: 0;
-  background: #fbfbfb;
+  background: #f3f3f3;
 }
 
 .md-layout.md-gutter>.md-layout-item {
@@ -31,8 +31,12 @@ body {
   background: white;
 }
 
+.lightgreybg {
+  background: #fafafa;
+}
+
 .greybg {
-  background: #f2f2f2;
+  background: #fbfbfb;
 }
 
 .primaryBackground {
@@ -55,9 +59,17 @@ hr {
   padding: 0 !important;
 }
 
+.hidden {
+  display: none;
+}
+
 .ordersHeading {
   text-align: center;
   font-size: 37px;
   border-bottom: solid 2px #cacaca;
   padding-bottom: 16px;
+}
+
+.cursor {
+  cursor: pointer;
 }
