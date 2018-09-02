@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 )
@@ -42,10 +40,7 @@ func main() {
 func GetOrders(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080")
 	w.Header().Set("content-type", "application/json")
-	//ebayOrders := fetchEbayOrders()
-	//ebayItemImage := fetchEbayItemImage("273258129797")xa
+	orders := fetchEbayOrders()
 
-	fmt.Println("MOCKED ORDERS: ", mockedEbayOrders)
-	orders, _ := json.Marshal(mockedEbayOrders)
 	w.Write(orders)
 }

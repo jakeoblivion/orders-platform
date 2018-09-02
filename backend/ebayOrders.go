@@ -11,9 +11,14 @@ var ebayToken = fetchEbayToken()
 type EbayOrders struct {
 	Total  int `json:"total"`
 	Orders []struct {
-		OrderID                      string    `json:"orderId"`
-		LegacyOrderID                string    `json:"legacyOrderId"`
-		CreationDate                 time.Time `json:"creationDate"`
+		OrderID        string    `json:"orderId"`
+		LegacyOrderID  string    `json:"legacyOrderId"`
+		CreationDate   time.Time `json:"creationDate"`
+		PricingSummary struct {
+			Total struct {
+				ConvertedFromValue string `json:"convertedFromValue"`
+			} `json:"total"`
+		} `json:"pricingSummary"`
 		FulfillmentStartInstructions []struct {
 			ShippingStep struct {
 				ShipTo struct {
@@ -37,11 +42,11 @@ type EbayOrders struct {
 			LegacyItemID string `json:"legacyItemId"`
 			Title        string `json:"title"`
 			LineItemCost struct {
-				Value string `json:"value"`
+				ConvertedFromValue string `json:"convertedFromValue"`
 			} `json:"lineItemCost"`
 			Quantity int `json:"quantity"`
 			Total    struct {
-				Value string `json:"value"`
+				ConvertedFromValue string `json:"convertedFromValue"`
 			} `json:"total"`
 			LineItemFulfillmentInstructions struct {
 				MaxEstimatedDeliveryDate time.Time `json:"maxEstimatedDeliveryDate"`
@@ -51,43 +56,49 @@ type EbayOrders struct {
 	} `json:"orders"`
 }
 
-var mockedEbayOrders = Orders{Orders: []Order{
-	{OrderItems: []OrderItem{
-		{
-			ItemName:  "REAL King Swallowtail in Frame UK - Yellow, Butterfly, Entomology, Taxidermy",
-			ImageUrl:  "https://i.ebayimg.com/00/s/MTYwMFgxNjAw/z/w58AAOSw6CJbFG32/$_1.JPG",
-			ItemPrice: "99.99"},
-	},
-		OrderDate:  "2000-08-22T01:34:06Z",
-		OrderTotal: "99.99",
-		ShipByDate: "2000-08-24T01:34:06Z",
-		ShippingAddress: ShippingAddress{
-			Name:        "John Smith",
-			AddressLine: "3 Ellen Street",
-			City:        "Runcorn",
-			PostCode:    "SW17TQ",
-			Country:     "UK",
-		},
-		Platform: "ebay",
-	},
-	{OrderItems: []OrderItem{
-		{
-			ItemName:  "Atlas Moth in Frame (Attacus atlas)",
-			ImageUrl:  "https://www.taxidermyart.co.uk/wp-content/uploads/2015/08/Atlas-Moth-300x285.jpg",
-			ItemPrice: "89.99"},
-	},
-		OrderDate:  "2018-08-22T01:34:06Z",
-		OrderTotal: "89.99",
-		ShipByDate: "2018-08-27T01:34:06Z",
-		ShippingAddress: ShippingAddress{
-			Name:        "Jane Doe",
-			AddressLine: "8 Ellen Street",
-			City:        "Acherfield",
-			PostCode:    "CR4 1GB",
-			Country:     "UK",
-		},
-		Platform: "etsy",
-	}}}
+type EbayListing struct {
+	Image struct {
+		ImageURL string `json:"imageUrl"`
+	} `json:"image"`
+}
+
+//var mockedEbayOrders = Orders{Orders: []Order{
+//	{OrderItems: []OrderItem{
+//		{
+//			ItemName:  "REAL King Swallowtail in Frame UK - Yellow, Butterfly, Entomology, Taxidermy",
+//			ImageUrl:  "https://i.ebayimg.com/00/s/MTYwMFgxNjAw/z/w58AAOSw6CJbFG32/$_1.JPG",
+//			ItemPrice: "99.99"},
+//	},
+//		OrderDate:  "2000-08-22T01:34:06Z",
+//		OrderTotal: "99.99",
+//		ShipByDate: "2000-08-24T01:34:06Z",
+//		ShippingAddress: ShippingAddress{
+//			Name:        "John Smith",
+//			AddressLine: "3 Ellen Street",
+//			City:        "Runcorn",
+//			PostCode:    "SW17TQ",
+//			Country:     "UK",
+//		},
+//		Platform: "ebay",
+//	},
+//	{OrderItems: []OrderItem{
+//		{
+//			ItemName:  "Atlas Moth in Frame (Attacus atlas)",
+//			ImageUrl:  "https://www.taxidermyart.co.uk/wp-content/uploads/2015/08/Atlas-Moth-300x285.jpg",
+//			ItemPrice: "89.99"},
+//	},
+//		OrderDate:  "2018-08-22T01:34:06Z",
+//		OrderTotal: "89.99",
+//		ShipByDate: "2018-08-27T01:34:06Z",
+//		ShippingAddress: ShippingAddress{
+//			Name:        "Jane Doe",
+//			AddressLine: "8 Ellen Street",
+//			City:        "Acherfield",
+//			PostCode:    "CR4 1GB",
+//			Country:     "UK",
+//		},
+//		Platform: "etsy",
+//	}}}
 
 func fetchEbayOrders() []byte {
 	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", ebayToken)}
@@ -99,20 +110,61 @@ func fetchEbayOrders() []byte {
 	if err != nil {
 		fmt.Println("There was an error UNMARSHALLING:", err)
 	}
-	//fmt.Printf("\n\n Ebay Orders Struct: %+v", ebayOrders)
 
-	ebayOrdersByte, err2 := json.Marshal(ebayOrders)
-	if err2 != nil {
-		fmt.Println("There was an error MARSHALLING:", err)
-	}
-	//fmt.Println("\n\n Ebay Orders stringfied:", string(ebayOrdersByte))
-
-	return ebayOrdersByte
+	return ebayOrdersAdapter(ebayOrders)
 }
 
-func fetchEbayItemImage(itemId string) []byte {
+func ebayOrdersAdapter(ebayOrders EbayOrders) []byte {
+	var orders Orders
+	for _, ebayOrder := range ebayOrders.Orders {
+		var orderItems []OrderItem
+		for _, ebayOrderItem := range ebayOrder.OrderItems {
+			orderItems = append(orderItems, OrderItem{
+				ItemName:  ebayOrderItem.Title,
+				ImageUrl:  fetchEbayItemImage(ebayOrderItem.LegacyItemID),
+				ItemPrice: ebayOrderItem.Total.ConvertedFromValue,
+			})
+		}
+
+		var order = Order{
+			OrderItems: orderItems,
+			OrderDate:  ebayOrder.CreationDate.String(),
+			OrderTotal: ebayOrder.PricingSummary.Total.ConvertedFromValue,
+			ShipByDate: ebayOrder.OrderItems[0].LineItemFulfillmentInstructions.ShipByDate.String(),
+			ShippingAddress: ShippingAddress{
+				Name:        ebayOrder.FulfillmentStartInstructions[0].ShippingStep.ShipTo.FullName,
+				AddressLine: ebayOrder.FulfillmentStartInstructions[0].ShippingStep.ShipTo.ContactAddress.AddressLine1,
+				City:        ebayOrder.FulfillmentStartInstructions[0].ShippingStep.ShipTo.ContactAddress.City,
+				PostCode:    ebayOrder.FulfillmentStartInstructions[0].ShippingStep.ShipTo.ContactAddress.PostalCode,
+				Country:     ebayCountryCodeConverter(ebayOrder.FulfillmentStartInstructions[0].ShippingStep.ShipTo.ContactAddress.CountryCode),
+			},
+			Platform: "ebay",
+		}
+		orders.Orders = append(orders.Orders, order)
+	}
+
+	adaptedOrders, err := json.Marshal(orders)
+	if err != nil {
+		fmt.Println("There was an error MARSHALLING:", err)
+	}
+
+	//fmt.Println("\n\n Adapted orders:", string(adaptedOrders))
+
+	return adaptedOrders
+}
+
+func fetchEbayItemImage(itemId string) string {
 	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", ebayToken)}
-	return ApiCallGet(fmt.Sprintf("https://api.ebay.com/buy/browse/v1/item/v1|%s|0", itemId), headers)
+	var ebayListing = ApiCallGet(fmt.Sprintf("https://api.ebay.com/buy/browse/v1/item/v1|%s|0", itemId), headers)
+
+	var ebayImageUrl EbayListing
+
+	err := json.Unmarshal(ebayListing, &ebayImageUrl)
+	if err != nil {
+		fmt.Println("There was an error UNMARSHALLING:", err)
+	}
+
+	return ebayImageUrl.Image.ImageURL
 }
 
 func fetchEbayToken() string {
