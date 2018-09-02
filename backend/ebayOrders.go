@@ -56,49 +56,11 @@ type EbayOrders struct {
 	} `json:"orders"`
 }
 
-type EbayListing struct {
-	Image struct {
-		ImageURL string `json:"imageUrl"`
-	} `json:"image"`
+type EbayImageUrl struct {
+	Item struct {
+		PictureURL []string `json:"pictureURL"`
+	} `json:"item"`
 }
-
-//var mockedEbayOrders = Orders{Orders: []Order{
-//	{OrderItems: []OrderItem{
-//		{
-//			ItemName:  "REAL King Swallowtail in Frame UK - Yellow, Butterfly, Entomology, Taxidermy",
-//			ImageUrl:  "https://i.ebayimg.com/00/s/MTYwMFgxNjAw/z/w58AAOSw6CJbFG32/$_1.JPG",
-//			ItemPrice: "99.99"},
-//	},
-//		OrderDate:  "2000-08-22T01:34:06Z",
-//		OrderTotal: "99.99",
-//		ShipByDate: "2000-08-24T01:34:06Z",
-//		ShippingAddress: ShippingAddress{
-//			Name:        "John Smith",
-//			AddressLine: "3 Ellen Street",
-//			City:        "Runcorn",
-//			PostCode:    "SW17TQ",
-//			Country:     "UK",
-//		},
-//		Platform: "ebay",
-//	},
-//	{OrderItems: []OrderItem{
-//		{
-//			ItemName:  "Atlas Moth in Frame (Attacus atlas)",
-//			ImageUrl:  "https://www.taxidermyart.co.uk/wp-content/uploads/2015/08/Atlas-Moth-300x285.jpg",
-//			ItemPrice: "89.99"},
-//	},
-//		OrderDate:  "2018-08-22T01:34:06Z",
-//		OrderTotal: "89.99",
-//		ShipByDate: "2018-08-27T01:34:06Z",
-//		ShippingAddress: ShippingAddress{
-//			Name:        "Jane Doe",
-//			AddressLine: "8 Ellen Street",
-//			City:        "Acherfield",
-//			PostCode:    "CR4 1GB",
-//			Country:     "UK",
-//		},
-//		Platform: "etsy",
-//	}}}
 
 func fetchEbayOrders() []byte {
 	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", ebayToken)}
@@ -121,7 +83,7 @@ func ebayOrdersAdapter(ebayOrders EbayOrders) []byte {
 		for _, ebayOrderItem := range ebayOrder.OrderItems {
 			orderItems = append(orderItems, OrderItem{
 				ItemName:  ebayOrderItem.Title,
-				ImageUrl:  fetchEbayItemImage(ebayOrderItem.LegacyItemID),
+				ImageUrl:  fetchEbayItemImageUrl(ebayOrderItem.LegacyItemID),
 				ItemPrice: ebayOrderItem.Total.ConvertedFromValue,
 			})
 		}
@@ -153,18 +115,16 @@ func ebayOrdersAdapter(ebayOrders EbayOrders) []byte {
 	return adaptedOrders
 }
 
-func fetchEbayItemImage(itemId string) string {
-	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", ebayToken)}
-	var ebayListing = ApiCallGet(fmt.Sprintf("https://api.ebay.com/buy/browse/v1/item/v1|%s|0", itemId), headers)
-
-	var ebayImageUrl EbayListing
+func fetchEbayItemImageUrl(itemId string) string {
+	var ebayListing = ApiCallGet(fmt.Sprintf("http://open.api.ebay.com/shopping?callname=GetSingleItem&responseencoding=JSON&appid=JacobNew-Taxiderm-PRD-0e0516b4c-e789e949&siteid=0&version=939&ItemID=%s", itemId), map[string]string{})
+	var ebayImageUrl EbayImageUrl
 
 	err := json.Unmarshal(ebayListing, &ebayImageUrl)
 	if err != nil {
 		fmt.Println("There was an error UNMARSHALLING:", err)
 	}
 
-	return ebayImageUrl.Image.ImageURL
+	return ebayImageUrl.Item.PictureURL[0]
 }
 
 func fetchEbayToken() string {
