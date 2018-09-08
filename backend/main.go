@@ -1,9 +1,15 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 )
+
+type OrdersInterface interface {
+	ordersAdapter() Orders
+}
 
 type Orders struct {
 	Orders []Order `json:"orders"`
@@ -42,5 +48,12 @@ func GetOrders(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	orders := fetchEbayOrders()
 
-	w.Write(orders)
+	adaptedOrders, err := json.Marshal(orders)
+	if err != nil {
+		fmt.Println("There was an error MARSHALLING:", err)
+	}
+
+	//fmt.Println("\n\n Adapted orders:", string(adaptedOrders))
+
+	w.Write(adaptedOrders)
 }

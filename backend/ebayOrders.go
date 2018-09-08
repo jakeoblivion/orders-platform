@@ -62,9 +62,10 @@ type EbayImageUrl struct {
 	} `json:"item"`
 }
 
-func fetchEbayOrders() []byte {
+func fetchEbayOrders() Orders {
 	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", ebayToken)}
-	response := ApiCallGet("https://api.ebay.com/sell/fulfillment/v1/order?filter=orderfulfillmentstatus:%7BNOT_STARTED%7CIN_PROGRESS%7D", headers)
+	response := ApiCallGet("https://api.ebay.com/sell/fulfillment/v1/order?limit=2", headers)
+	//response := ApiCallGet("https://api.ebay.com/sell/fulfillment/v1/order?filter=orderfulfillmentstatus:%7BNOT_STARTED%7CIN_PROGRESS%7D", headers)
 
 	var ebayOrders EbayOrders
 
@@ -73,10 +74,10 @@ func fetchEbayOrders() []byte {
 		fmt.Println("There was an error UNMARSHALLING:", err)
 	}
 
-	return ebayOrdersAdapter(ebayOrders)
+	return OrdersInterface.ordersAdapter(ebayOrders)
 }
 
-func ebayOrdersAdapter(ebayOrders EbayOrders) []byte {
+func (ebayOrders EbayOrders) ordersAdapter() Orders {
 	var orders Orders
 	for _, ebayOrder := range ebayOrders.Orders {
 		var orderItems []OrderItem
@@ -104,15 +105,7 @@ func ebayOrdersAdapter(ebayOrders EbayOrders) []byte {
 		}
 		orders.Orders = append(orders.Orders, order)
 	}
-
-	adaptedOrders, err := json.Marshal(orders)
-	if err != nil {
-		fmt.Println("There was an error MARSHALLING:", err)
-	}
-
-	//fmt.Println("\n\n Adapted orders:", string(adaptedOrders))
-
-	return adaptedOrders
+	return orders
 }
 
 func fetchEbayItemImageUrl(itemId string) string {
@@ -128,10 +121,8 @@ func fetchEbayItemImageUrl(itemId string) string {
 }
 
 func fetchEbayToken() string {
-	refreshToken := ""
 	body := []byte(fmt.Sprintf("grant_type=refresh_token&refresh_token=%s&scope=https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly", refreshToken))
-	encodedOAuthCreds := ""
-
 	headers := map[string]string{"Content-Type": "application/x-www-form-urlencoded", "Authorization": fmt.Sprintf("Basic %s", encodedOAuthCreds)}
+
 	return string(ApiCallPost("https://api.ebay.com/identity/v1/oauth2/token", body, headers))
 }
