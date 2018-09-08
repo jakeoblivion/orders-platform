@@ -62,7 +62,7 @@ type EbayImageUrl struct {
 	} `json:"item"`
 }
 
-func fetchEbayOrders() Orders {
+func fetchEbayOrders() []Order {
 	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", ebayToken)}
 	response := ApiCallGet("https://api.ebay.com/sell/fulfillment/v1/order?limit=2", headers)
 	//response := ApiCallGet("https://api.ebay.com/sell/fulfillment/v1/order?filter=orderfulfillmentstatus:%7BNOT_STARTED%7CIN_PROGRESS%7D", headers)
@@ -74,12 +74,12 @@ func fetchEbayOrders() Orders {
 		fmt.Println("There was an error UNMARSHALLING:", err)
 	}
 
-	return OrdersInterface.ordersAdapter(ebayOrders)
+	return Adapter.OrdersAdapter(ebayOrders)
 }
 
-func (ebayOrders EbayOrders) ordersAdapter() Orders {
-	var orders Orders
-	for _, ebayOrder := range ebayOrders.Orders {
+func (eo EbayOrders) OrdersAdapter() []Order {
+	var orders []Order
+	for _, ebayOrder := range eo.Orders {
 		var orderItems []OrderItem
 		for _, ebayOrderItem := range ebayOrder.OrderItems {
 			orderItems = append(orderItems, OrderItem{
@@ -103,7 +103,7 @@ func (ebayOrders EbayOrders) ordersAdapter() Orders {
 			},
 			Platform: "ebay",
 		}
-		orders.Orders = append(orders.Orders, order)
+		orders = append(orders, order)
 	}
 	return orders
 }

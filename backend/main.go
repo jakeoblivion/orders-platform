@@ -7,12 +7,8 @@ import (
 	"net/http"
 )
 
-type OrdersInterface interface {
-	ordersAdapter() Orders
-}
-
-type Orders struct {
-	Orders []Order `json:"orders"`
+type Adapter interface {
+	OrdersAdapter() []Order
 }
 
 type Order struct {
@@ -46,14 +42,14 @@ func main() {
 func GetOrders(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080")
 	w.Header().Set("content-type", "application/json")
-	orders := fetchEbayOrders()
+	var orders []Order
+
+	orders = append(orders, fetchEbayOrders()...)
 
 	adaptedOrders, err := json.Marshal(orders)
 	if err != nil {
 		fmt.Println("There was an error MARSHALLING:", err)
 	}
-
-	//fmt.Println("\n\n Adapted orders:", string(adaptedOrders))
 
 	w.Write(adaptedOrders)
 }
