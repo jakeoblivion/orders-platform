@@ -20,6 +20,10 @@ func ApiCall(method string, url string, body []byte, headers map[string]string) 
 	//make API request
 	response, err := client.Do(request)
 
+	if response.StatusCode == 401 {
+		fmt.Printf("Failed to parse token: %s", response)
+	}
+
 	if err != nil {
 		fmt.Printf("%s", err)
 		os.Exit(1)
