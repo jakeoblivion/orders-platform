@@ -44,12 +44,12 @@ func GetOrders(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("content-type", "application/json")
 	var orders []Order
 
+	orders = append(orders, fetchWooOrders()...)
 	orders = append(orders, fetchEbayOrders()...)
 
 	adaptedOrders, err := json.Marshal(orders)
 	if err != nil {
 		fmt.Println("There was an error MARSHALLING:", err)
 	}
-
 	w.Write(adaptedOrders)
 }

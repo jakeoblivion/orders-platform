@@ -1,6 +1,6 @@
 <template>
-  <div class="md-layout shippingOptions">
-    <div class="md-layout-item md-large-size-33 md-medium-size-33 md-small-size-100">
+  <div class="md-layout">
+    <div class="shippingOption md-layout-item md-large-size-33 md-medium-size-33 md-small-size-100">
       <a href="https://business.parcel.royalmail.com/orders/" target="_blank">
         <div class="shipping-link">
           <p>Print Shipping Labels</p>
@@ -8,7 +8,7 @@
         </div>
       </a>
     </div>
-    <div class="md-layout-item md-large-size-33 md-medium-size-33 md-small-size-100">
+    <div class="shippingOption md-layout-item md-large-size-33 md-medium-size-33 md-small-size-100">
       <a href="https://www.paypal.com/businessexp/transactions?tab=activity&transactiontype=PAYMENTS_RECEIVED" target="_blank">
         <div class="shipping-link">
           <p>Print Shipping Labels</p>
@@ -16,7 +16,7 @@
         </div>
       </a>
     </div>
-    <div class="md-layout-item md-large-size-33 md-medium-size-33 md-small-size-100">
+    <div class="shippingOption md-layout-item md-large-size-33 md-medium-size-33 md-small-size-100">
       <a href="https://www.parcel2go.com/myaccount/uploadeditems" target="_blank">
         <div class="shipping-link">
           <p>Print Shipping Labels</p>
@@ -34,7 +34,7 @@ export default {
 </script>
 
 <style scoped>
-  .shippingOptions {
+  .shippingOption    {
     margin-top: 24px;
   }
 

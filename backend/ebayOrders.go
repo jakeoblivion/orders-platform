@@ -99,7 +99,7 @@ func (eo EbayOrders) OrdersAdapter() []Order {
 				AddressLine: ebayOrder.FulfillmentStartInstructions[0].ShippingStep.ShipTo.ContactAddress.AddressLine1,
 				City:        ebayOrder.FulfillmentStartInstructions[0].ShippingStep.ShipTo.ContactAddress.City,
 				PostCode:    ebayOrder.FulfillmentStartInstructions[0].ShippingStep.ShipTo.ContactAddress.PostalCode,
-				Country:     ebayCountryCodeConverter(ebayOrder.FulfillmentStartInstructions[0].ShippingStep.ShipTo.ContactAddress.CountryCode),
+				Country:     countryCodeConverter(ebayOrder.FulfillmentStartInstructions[0].ShippingStep.ShipTo.ContactAddress.CountryCode),
 			},
 			Platform: "ebay",
 		}

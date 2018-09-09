@@ -57,7 +57,7 @@ export default {
   mounted() {
     axios
       .get("http://localhost:3001/get-orders")
-      .then(response => (this.orders = response.data.orders))
+      .then(response => (this.orders = response.data))
       .catch(err => console.log(err));
   }
 };
@@ -77,7 +77,7 @@ export default {
       <div class="ordersContainer md-layout md-gutter">
         <Order :class="[{'hidden': platforms.find(item => item.platform === order.platform).hidden}]" v-for="order in orders" :orderDetails="order" />
       </div>
-      <ShippingOptions v-if="orders.length > 0" />
+      <ShippingOptions v-if="!!orders.length" />
 
     </main>
   </div>

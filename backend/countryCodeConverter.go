@@ -5,7 +5,7 @@ type Country struct {
 	countryName string
 }
 
-func ebayCountryCodeConverter(countryCodeFromEbay string) string {
+func countryCodeConverter(countryCodeFromEbay string) string {
 	var countries = []Country{
 		Country{
 			countryCode: "AA",
