@@ -46,6 +46,7 @@ func GetOrders(w http.ResponseWriter, req *http.Request) {
 
 	orders = append(orders, fetchWooOrders()...)
 	orders = append(orders, fetchEbayOrders()...)
+	orders = append(orders, fetchEtsyOrders()...)
 
 	adaptedOrders, err := json.Marshal(orders)
 	if err != nil {

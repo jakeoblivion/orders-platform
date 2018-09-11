@@ -105,8 +105,8 @@ func fetchWooItemImageUrl(itemId int) string {
 		fmt.Println("There was an error UNMARSHALLING:", err)
 	}
 	imageUrl := wooImageUrl.Product.PictureURL
-	index := len(imageUrl) - 4 //.jpg
-	imageUrlThumbnail := imageUrl[:index] + "-150x150" + imageUrl[index:]
+	index := len(imageUrl) - 4                                            //.jpg
+	imageUrlThumbnail := imageUrl[:index] + "-150x150" + imageUrl[index:] //TODO: Find a vbetter way to get the thumbnails
 	fmt.Println(imageUrlThumbnail)
 	return imageUrlThumbnail
 }
