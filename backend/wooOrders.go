@@ -28,6 +28,12 @@ type WooOrders []struct {
 	} `json:"line_items"`
 }
 
+type WooImageUrl struct {
+	Product struct {
+		PictureURL string `json:"featured_src"`
+	} `json:"product"`
+}
+
 func fetchWooOrders() []Order {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", "https://taxidermyart.co.uk//wp-json/wc/v2/orders", nil)
@@ -56,7 +62,7 @@ func (wo WooOrders) OrdersAdapter() []Order {
 		for _, wooOrderItem := range wooOrder.LineItems {
 			orderItems = append(orderItems, OrderItem{
 				ItemName:  wooOrderItem.Name,
-				ImageUrl:  "https://i.ebayimg.com/00/s/MTYwMFgxNjAw/z/eEIAAOSwX3FbFG4v/$_1.JPG?set_id=880000500F", //string(wooOrderItem.ProductID),
+				ImageUrl:  fetchWooItemImageUrl(wooOrderItem.ProductID),
 				ItemPrice: wooOrderItem.Total,
 			})
 		}
@@ -79,4 +85,28 @@ func (wo WooOrders) OrdersAdapter() []Order {
 		orders = append(orders, order)
 	}
 	return orders
+}
+
+func fetchWooItemImageUrl(itemId int) string {
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", fmt.Sprintf("https://taxidermyart.co.uk/wc-api/v3/products/%v?fields=featured_src", itemId), nil)
+	req.SetBasicAuth(wooConsumerKey, wooSecretKey)
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	response, err2 := ioutil.ReadAll(resp.Body)
+	if err2 != nil {
+		log.Fatal(err)
+	}
+	var wooImageUrl WooImageUrl
+	err3 := json.Unmarshal(response, &wooImageUrl)
+	if err3 != nil {
+		fmt.Println("There was an error UNMARSHALLING:", err)
+	}
+	imageUrl := wooImageUrl.Product.PictureURL
+	index := len(imageUrl) - 4 //.jpg
+	imageUrlThumbnail := imageUrl[:index] + "-150x150" + imageUrl[index:]
+	fmt.Println(imageUrlThumbnail)
+	return imageUrlThumbnail
 }

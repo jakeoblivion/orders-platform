@@ -27,16 +27,15 @@ func ApiCall(method string, url string, body []byte, headers map[string]string) 
 	if err != nil {
 		fmt.Printf("%s", err)
 		os.Exit(1)
-	} else {
-		defer response.Body.Close()
-		body, err := ioutil.ReadAll(response.Body)
-		if err != nil {
-			fmt.Printf("%s", err)
-			os.Exit(1)
-		}
-		return body
 	}
-	return nil
+	defer response.Body.Close()
+	body, err2 := ioutil.ReadAll(response.Body)
+
+	if err2 != nil {
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	}
+	return body
 }
 
 func ApiCallGet(url string, headers map[string]string) []byte {

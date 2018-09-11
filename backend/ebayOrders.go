@@ -109,7 +109,7 @@ func (eo EbayOrders) OrdersAdapter() []Order {
 }
 
 func fetchEbayItemImageUrl(itemId string) string {
-	var ebayListing = ApiCallGet(fmt.Sprintf("http://open.api.ebay.com/shopping?callname=GetSingleItem&responseencoding=JSON&appid=JacobNew-Taxiderm-PRD-0e0516b4c-e789e949&siteid=0&version=939&ItemID=%s", itemId), map[string]string{})
+	ebayListing := ApiCallGet(fmt.Sprintf("http://open.api.ebay.com/shopping?callname=GetSingleItem&responseencoding=JSON&appid=JacobNew-Taxiderm-PRD-0e0516b4c-e789e949&siteid=0&version=939&ItemID=%s", itemId), map[string]string{})
 	var ebayImageUrl EbayImageUrl
 
 	err := json.Unmarshal(ebayListing, &ebayImageUrl)
