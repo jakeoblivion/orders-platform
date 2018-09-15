@@ -39,15 +39,11 @@ jobs:
   deploy:
     name: Deploy to Production
     docker:
-    - image: circleci/node:8
+    - image: alpine/git:1.0.4
     working_directory: ~/repo
 
     steps:
     - checkout
-
-    - run:
-        name: Create build for production
-        command: npm run build
 
     - run:
         name: Create build for production
