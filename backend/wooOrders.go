@@ -36,7 +36,7 @@ type WooImageUrl struct {
 
 func fetchWooOrders() []Order {
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", "https://taxidermyart.co.uk//wp-json/wc/v2/orders", nil)
+	req, err := http.NewRequest("GET", "https://taxidermyart.co.uk/wp-json/wc/v2/orders?status=processing", nil)
 	req.SetBasicAuth(wooConsumerKey, wooSecretKey)
 	resp, err := client.Do(req)
 	if err != nil {

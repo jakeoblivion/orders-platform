@@ -98,12 +98,12 @@ export default {
 }
 
 .orderItemImg {
-  width: 100%;
-    max-width: 180px;
+  width: 100%  ;
+    max-width: 200px;
 }
 
 .orderContent {
-  padding: 16px 8px;
+  padding: 16px;
   margin-right: 4%;
   border-right: dashed 2px #f1f1f1;
 }
