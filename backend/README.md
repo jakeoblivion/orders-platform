@@ -1,4 +1,4 @@
-###Obtaining ETSY OAuth 1.0 token via Postman:
+### Obtaining ETSY OAuth 1.0 token via Postman:
 1. Create etsy app
 2. Using the consumer key (KEYSTRING) and consumer secret (SHARED SECRET) in the Authorization headers, hit the request token endpoint via Postman: `https://openapi.etsy.com/v2/oauth/request_token?scope=transactions_r email_r listings_r` 
 3. Decode the response using utf8_decode and past in the browser
