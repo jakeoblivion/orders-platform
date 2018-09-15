@@ -35,12 +35,13 @@ type ShippingAddress struct {
 }
 
 func main() {
+	http.Handle("/", http.FileServer(http.Dir("./dist")))
 	http.HandleFunc("/get-orders", GetOrders)
 	log.Fatal(http.ListenAndServe(":3001", nil))
 }
 
 func GetOrders(w http.ResponseWriter, req *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080")
+	//w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080")
 	w.Header().Set("content-type", "application/json")
 	var orders []Order
 
