@@ -45,9 +45,9 @@ jobs:
     steps:
     - checkout
 
-    - run:
-        name: Create build for production
-        command: git remote add heroku https://git.heroku.com/orders-platform.git
+#    - run:
+#        name: Create build for production
+#        command: git remote add heroku https://git.heroku.com/orders-platform.git
 
     - add_ssh_keys:
         fingerprints:
@@ -56,7 +56,7 @@ jobs:
         name: Deploy Master to Heroku (production)
         command: |
           if [ "${CIRCLE_BRANCH}" == "master" ]; then
-            git push heroku master
+            git push heroku https://git.heroku.com/orders-platform.git
           fi
 
 workflows:
