@@ -27,7 +27,9 @@ jobs:
         # fallback to using the latest cache if no exact match is found
         - v1-dependencies-
 
-    - run: yarn install
+    - run:
+        name: Install node modules
+        command: npm install
 
     - save_cache:
         paths:
@@ -37,16 +39,20 @@ jobs:
     # run tests!
     - run: npm test
 
+    - run:
+        name: Create build for production
+        command: npm run build
+    # build production
+
   deploy:
     name: Deploy to Production
     docker:
       - image: alpine/git:1.0.4
     working_directory: ~/repo
+
     steps:
       - checkout
-      - run:
-          name: Setup Heroku
-          command: sh .circleci/setup-heroku.sh
+
       - add_ssh_keys:
           fingerprints:
           - "27:11:9e:a4:61:38:7f:d5:3b:30:ee:b5:67:82:5f:96"
