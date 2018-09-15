@@ -35,7 +35,7 @@ jobs:
     # run tests!
     - run: npm test
 
-  # build production
+  # build production image
   deploy:
     name: Deploy to Production
     docker:
@@ -51,12 +51,12 @@ jobs:
 
     - add_ssh_keys:
         fingerprints:
-        - "27:11:9e:a4:61:38:7f:d5:3b:30:ee:b5:67:82:5f:96"
+        - 27:11:9e:a4:61:38:7f:d5:3b:30:ee:b5:67:82:5f:96
     - deploy:
         name: Deploy Master to Heroku (production)
         command: |
           if [ "${CIRCLE_BRANCH}" == "master" ]; then
-            git push heroku https://git.heroku.com/orders-platform.git
+            git push heroku master
           fi
 
 workflows:
