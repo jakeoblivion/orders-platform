@@ -1,13 +1,12 @@
 import { shallowMount } from "@vue/test-utils";
 import OrderQuantity from "@/components/OrderQuantity.vue";
-import PlatformConstants from "src/platformConstants";
 
 describe("OrderQuantity.vue", () => {
   it("renders props.type when passed", () => {
-    const type = PlatformConstants.ETSY;
+    const type = "etsy";
     const wrapper = shallowMount(OrderQuantity, {
-      propsData: { type }
+      propsData: { platform: type, quantity: 1 }
     });
-    expect(wrapper.text()).toMatch(type);
+    expect(wrapper.text()).toMatch("1");
   });
 });
