@@ -1,0 +1,14 @@
+{
+	"ImportPath": "orders-management",
+	"GoVersion": "go1.11",
+	"GodepVersion": "v80",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/mrjones/oauth",
+			"Rev": "f4e24b6d100c9436cbfe5d439581653d455490e7"
+		}
+	]
+}

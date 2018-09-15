@@ -20,5 +20,5 @@ yarn-error.log*
 *.sln
 *.sw*
 
-backend/secrets.go
+backend/src/orders-management/secrets.go
 backend/src*
