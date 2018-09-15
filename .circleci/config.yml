@@ -49,19 +49,19 @@ jobs:
     steps:
     - checkout
 
-      - run:
+    - run:
         name: Setup Heroku
         command: sh .circleci/setup-heroku.sh
 
-      - add_ssh_keys:
-          fingerprints:
-          - "27:11:9e:a4:61:38:7f:d5:3b:30:ee:b5:67:82:5f:96"
-      - deploy:
-          name: Deploy Master to Heroku (production)
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              git push heroku master
-            fi
+    - add_ssh_keys:
+        fingerprints:
+        - "27:11:9e:a4:61:38:7f:d5:3b:30:ee:b5:67:82:5f:96"
+    - deploy:
+        name: Deploy Master to Heroku (production)
+        command: |
+          if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            git push heroku master
+          fi
 
 workflows:
   version: 2
