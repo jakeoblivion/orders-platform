@@ -35,10 +35,6 @@ jobs:
     # run tests!
     - run: npm test
 
-    - run:
-        name: Create build for production
-        command: npm run build
-
   # build production
   deploy:
     name: Deploy to Production
@@ -50,8 +46,12 @@ jobs:
     - checkout
 
     - run:
-        name: Setup Heroku
-        command: sh .circleci/setup-heroku.sh
+        name: Create build for production
+        command: npm run build
+
+    - run:
+        name: Create build for production
+        command: git remote add heroku https://git.heroku.com/orders-platform.git
 
     - add_ssh_keys:
         fingerprints:
