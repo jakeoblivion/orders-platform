@@ -26,17 +26,15 @@ type LatestEtsyItemOrders struct {
 
 type EtsyOrders struct {
 	Results []struct {
-		ReceiptID       int    `json:"receipt_id"`
-		CreationTsz     int    `json:"creation_tsz"`
-		Name            string `json:"name"`
-		FirstLine       string `json:"first_line"`
-		City            string `json:"city"`
-		Zip             string `json:"zip"`
-		CountryID       int    `json:"country_id"`
-		Grandtotal      string `json:"grandtotal"`
-		ShippedDate     int    `json:"shipped_date"`
-		IsOverdue       bool   `json:"is_overdue"`
-		DaysFromDueDate int    `json:"days_from_due_date"`
+		ReceiptID   int    `json:"receipt_id"`
+		CreationTsz int    `json:"creation_tsz"`
+		Name        string `json:"name"`
+		FirstLine   string `json:"first_line"`
+		City        string `json:"city"`
+		Zip         string `json:"zip"`
+		CountryID   int    `json:"country_id"`
+		Grandtotal  string `json:"grandtotal"`
+		ShippedDate int    `json:"shipped_date"`
 	} `json:"results"`
 }
 
@@ -98,9 +96,9 @@ func (eo EtsyOrders) OrdersAdapter() []Order {
 
 		var order = Order{
 			OrderItems: orderItems,
-			OrderDate:  string(etsyOrder.CreationTsz), //convert Unix to date string
+			OrderDate:  time.Unix(int64(etsyOrder.CreationTsz), 0).Format(time.RFC3339),
 			OrderTotal: etsyOrder.Grandtotal,
-			ShipByDate: time.Now().AddDate(0, 0, etsyOrder.DaysFromDueDate).Format("2006-01-02T15:04:05"),
+			ShipByDate: time.Unix(int64(etsyOrder.ShippedDate), 0).Format(time.RFC3339),
 			ShippingAddress: ShippingAddress{
 				Name:        etsyOrder.Name,
 				AddressLine: etsyOrder.FirstLine,

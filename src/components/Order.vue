@@ -24,7 +24,7 @@
             </div>
 
             <div>{{orderDetails.shippingAddress.name}}</div>
-            <div>{{orderDetails.shippingAddress.addressLine}}, {{orderDetails.shippingAddress.city}}</div>
+            <div>{{orderDetails.shippingAddress.addressLine.length > 20 ? orderDetails.shippingAddress.addressLine.slice(0, 20) + '...' : orderDetails.shippingAddress.addressLine}}, {{orderDetails.shippingAddress.city.length > 12 ? orderDetails.shippingAddress.city.slice(0, 12) + '...' : orderDetails.shippingAddress.city}}</div>
             <div>{{orderDetails.shippingAddress.postCode}}, {{orderDetails.shippingAddress.country}}</div>
             <div class="shipByDate" v-bind:class="{ 'orange': isOverdue(orderDetails.shipByDate) }">Ship by: {{ orderDetails.shipByDate | moment("ddd, MMM Do") }}</div>
 
