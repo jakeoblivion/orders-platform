@@ -1,2 +1,1 @@
-web: go run backend/*.go
-
+web: ./server
