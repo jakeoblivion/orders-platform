@@ -20,5 +20,8 @@ yarn-error.log*
 *.sln
 *.sw*
 
+backend/bin
+backend/pkg
 backend/src/orders-management/secrets.go
-backend/src*
+backend/src/orders-management/vendor
+backend/src/github.com

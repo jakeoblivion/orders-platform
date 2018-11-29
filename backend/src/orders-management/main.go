@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 )
 
 type Adapter interface {
@@ -41,17 +42,37 @@ func main() {
 }
 
 func GetOrders(w http.ResponseWriter, req *http.Request) {
-	//w.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080")
 	w.Header().Set("content-type", "application/json")
 	var orders []Order
 
-	orders = append(orders, fetchWooOrders()...)
-	orders = append(orders, fetchEbayOrders()...)
-	orders = append(orders, fetchEtsyOrders()...)
+	start := time.Now()
+
+	ordersChannel := make(chan []Order)
+
+	go func() {
+		ordersChannel <- fetchEbayOrders()
+	}()
+	go func() {
+		ordersChannel <- fetchEtsyOrders()
+	}()
+	go func() {
+		//ordersChannel <- fetchWooOrders()
+	}()
+
+	for i := 0; i < 2; i++ {
+		ordersFromChannel := <-ordersChannel
+
+		orders = append(orders, ordersFromChannel...)
+	}
 
 	adaptedOrders, err := json.Marshal(orders)
 	if err != nil {
-		fmt.Println("There was an error MARSHALLING:", err)
+		fmt.Println("There was an error MARSHALLING all the orders:", err)
 	}
-	w.Write(adaptedOrders)
+
+	fmt.Println("Time taken: ", time.Since(start).Seconds())
+	_, err = w.Write(adaptedOrders)
+	if err != nil {
+		fmt.Println("There was an error returning orders:", err)
+	}
 }

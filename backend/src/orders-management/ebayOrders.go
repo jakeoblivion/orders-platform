@@ -6,8 +6,6 @@ import (
 	"time"
 )
 
-var ebayToken = fetchEbayToken()
-
 type EbayOrders struct {
 	Total  int `json:"total"`
 	Orders []struct {
@@ -63,9 +61,9 @@ type EbayImageUrl struct {
 }
 
 func fetchEbayOrders() []Order {
-	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", ebayToken)}
-	response := ApiCallGet("https://api.ebay.com/sell/fulfillment/v1/order?limit=2", headers)
-	//response := ApiCallGet("https://api.ebay.com/sell/fulfillment/v1/order?filter=orderfulfillmentstatus:%7BNOT_STARTED%7CIN_PROGRESS%7D", headers)
+	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", fetchEbayToken())}
+	//response := ApiCallGet("https://api.ebay.com/sell/fulfillment/v1/order?limit=2", headers)
+	response := ApiCallGet("https://api.ebay.com/sell/fulfillment/v1/order?filter=orderfulfillmentstatus:%7BNOT_STARTED%7CIN_PROGRESS%7D", headers)
 
 	var ebayOrders EbayOrders
 
@@ -105,6 +103,8 @@ func (eo EbayOrders) OrdersAdapter() []Order {
 		}
 		orders = append(orders, order)
 	}
+	fmt.Println("Finished fetching Ebay Orders")
+
 	return orders
 }
 
