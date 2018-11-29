@@ -56,10 +56,10 @@ func GetOrders(w http.ResponseWriter, req *http.Request) {
 		ordersChannel <- fetchEtsyOrders()
 	}()
 	go func() {
-		//ordersChannel <- fetchWooOrders()
+		ordersChannel <- fetchWooOrders()
 	}()
 
-	for i := 0; i < 2; i++ {
+	for i := 0; i < 3; i++ {
 		ordersFromChannel := <-ordersChannel
 
 		orders = append(orders, ordersFromChannel...)

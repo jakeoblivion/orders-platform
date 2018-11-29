@@ -37,19 +37,26 @@ type WooImageUrl struct {
 func fetchWooOrders() []Order {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", "https://taxidermyart.co.uk/wp-json/wc/v2/orders?status=processing", nil)
+	req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0")
+
 	req.SetBasicAuth(wooConsumerKey, wooSecretKey)
 	resp, err := client.Do(req)
-	if err != nil {
+
+	if resp.StatusCode != 200 || err != nil {
+		fmt.Println("Unable to fetch woo orders: ", resp.Status)
 		log.Fatal(err)
 	}
+
 	response, err2 := ioutil.ReadAll(resp.Body)
+
 	if err2 != nil {
 		log.Fatal(err)
 	}
+
 	var wooOrders WooOrders
-	err3 := json.Unmarshal(response, &wooOrders)
-	if err3 != nil {
-		fmt.Println("There was an error UNMARSHALLING:", err)
+	err = json.Unmarshal(response, &wooOrders)
+	if err != nil {
+		fmt.Println("There was an error UNMARSHALLING wooOrders:", err)
 	}
 
 	return Adapter.OrdersAdapter(wooOrders)
@@ -84,6 +91,8 @@ func (wo WooOrders) OrdersAdapter() []Order {
 		}
 		orders = append(orders, order)
 	}
+	fmt.Println("Finished fetching Woo Orders")
+
 	return orders
 }
 
@@ -91,6 +100,8 @@ func fetchWooItemImageUrl(itemId int) string {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", fmt.Sprintf("https://taxidermyart.co.uk/wc-api/v3/products/%v?fields=featured_src", itemId), nil)
 	req.SetBasicAuth(wooConsumerKey, wooSecretKey)
+	req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0")
+
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Fatal(err)
@@ -102,11 +113,10 @@ func fetchWooItemImageUrl(itemId int) string {
 	var wooImageUrl WooImageUrl
 	err3 := json.Unmarshal(response, &wooImageUrl)
 	if err3 != nil {
-		fmt.Println("There was an error UNMARSHALLING:", err)
+		fmt.Println("There was an error UNMARSHALLING wooImageUrl:", err)
 	}
 	imageUrl := wooImageUrl.Product.PictureURL
 	index := len(imageUrl) - 4                                            //.jpg
 	imageUrlThumbnail := imageUrl[:index] + "-300x300" + imageUrl[index:] //TODO: Find a better way to get the thumbnails
-	fmt.Println(imageUrlThumbnail)
 	return imageUrlThumbnail
 }

@@ -149,7 +149,6 @@ func getEtsyOrders() EtsyOrders {
 }
 
 func getLatestEtsyOrdersItem() LatestEtsyItemOrders {
-	fmt.Println("Called getLatestEtsyOrdersItem")
 	response := etsyApiCall("https://openapi.etsy.com/v2/shops/TaxidermyArt/transactions/?limit=30")
 
 	var latestEtsyItemOrders LatestEtsyItemOrders
