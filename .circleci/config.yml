@@ -27,37 +27,43 @@ jobs:
         # fallback to using the latest cache if no exact match is found
         - v1-dependencies-
 
+    - run:
+        name: Install Dependencies
+        command: npm install
+
     - save_cache:
         paths:
         - node_modules
         key: v1-dependencies-{{ checksum "package.json" }}
 
     # run tests!
-    - run: npm test
+    - run:
+        name: Run unit tests
+        command: npm run test:unit
 
   # build production
-  deploy:
-    name: Deploy to Production
-    docker:
-    - image: circleci/golang:1.10.4
-    working_directory: ~/repo
-
-    steps:
-    - checkout
+#  deploy:
+#    name: Deploy to Production
+#    docker:
+#    - image: circleci/golang:1.10.4
+#    working_directory: ~/repo
+#
+#    steps:
+#    - checkout
 
 #    - run:
 #        name: Create build for production
 #        command: git remote add heroku https://git.heroku.com/orders-platform.git
 
-    - add_ssh_keys:
-        fingerprints:
-        - 27:11:9e:a4:61:38:7f:d5:3b:30:ee:b5:67:82:5f:96
-    - deploy:
-        name: Deploy Master to Heroku (production)
-        command: |
-          if [ "${CIRCLE_BRANCH}" == "master" ]; then
-            git push heroku master && echo "success"
-          fi
+#    - add_ssh_keys:
+#        fingerprints:
+#        - 27:11:9e:a4:61:38:7f:d5:3b:30:ee:b5:67:82:5f:96
+#    - deploy:
+#        name: Deploy Master to Heroku (production)
+#        command: |
+#          if [ "${CIRCLE_BRANCH}" == "master" ]; then
+#            git push heroku master && echo "success"
+#          fi
 
 workflows:
   version: 2

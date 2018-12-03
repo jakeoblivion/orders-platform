@@ -36,7 +36,7 @@ type ShippingAddress struct {
 }
 
 func main() {
-	http.Handle("/", http.FileServer(http.Dir("./dist")))
+	http.Handle("/", http.FileServer(http.Dir("/root/dist")))
 	http.HandleFunc("/get-orders", GetOrders)
 	log.Fatal(http.ListenAndServe(":3001", nil))
 }

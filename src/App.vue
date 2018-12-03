@@ -39,10 +39,15 @@ export default {
       })
     },
     showAllOrders() {
-      this.platforms.map(item => {
-        item.hidden = false
-      })
-    }
+        this.platforms.map(item => {
+            item.hidden = false
+        })
+    },
+      sortOrdersByShipByDate(orders) {
+      return orders.sort((a,b) => {
+              return new Date(a.shipByDate) - new Date(b.shipByDate)
+          })
+      }
   },
   data() {
     return {
@@ -57,10 +62,10 @@ export default {
   mounted() {
     axios
       .get("/get-orders")
-      .then(response => (this.orders = response.data))
-      .catch(err => console.log(err));
+      .then(response => (this.orders = this.sortOrdersByShipByDate(response.data) || []))
+      .catch(err => console.log(err))
   }
-};
+}
 </script>
 
 <template>
