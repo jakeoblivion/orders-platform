@@ -4,8 +4,8 @@
 #
 version: 2
 jobs:
-  build:
-    name: Build and Test on CI
+  build-front-end:
+    name: Build and Test Front-End
     docker:
     # specify the version you desire here
     - image: circleci/node:8
@@ -36,25 +36,47 @@ jobs:
         - node_modules
         key: v1-dependencies-{{ checksum "package.json" }}
 
-    # run tests!
     - run:
         name: Run unit tests
         command: npm run test:unit
 
-  # build production
+    - run:
+        name: Build dist
+        command: npm run build
+
+  build-back-end:
+    name: Build and Test Back-End
+
+    docker:
+    - image: circleci/golang:1.10.4
+
+    working_directory: ~/repo/backend/src/orders-management
+
+    steps:
+    - checkout
+
+    - run:
+        name: Install Dependencies
+        command: go get github.com/mrjones/oauth
+
+    - run:
+        name: Build server
+        command: env GOOS=linux GOARCH=amd64 go build -o main backend/src/orders-management/*.go
+
+  #build production
 #  deploy:
-#    name: Deploy to Production
+#    name: Build and Test Back-End
 #    docker:
 #    - image: circleci/golang:1.10.4
 #    working_directory: ~/repo
 #
 #    steps:
 #    - checkout
-
+#
 #    - run:
 #        name: Create build for production
 #        command: git remote add heroku https://git.heroku.com/orders-platform.git
-
+#
 #    - add_ssh_keys:
 #        fingerprints:
 #        - 27:11:9e:a4:61:38:7f:d5:3b:30:ee:b5:67:82:5f:96
@@ -69,10 +91,11 @@ workflows:
   version: 2
   build-and-deploy:
     jobs:
-    - build
-    - deploy:
-        requires:
-        - build
-        filters:
-          branches:
-            only: master
+    - build-front-end
+    - build-back-end
+#    - deploy:
+#        requires:
+#        - build
+#        filters:
+#          branches:
+#            only: master
