@@ -8,7 +8,7 @@ COPY .eslintrc.js .eslintrc.js
 COPY src src
 COPY public public
 
-RUN npm install --production --no-optional
+RUN npm install --no-optional
 RUN npm run build
 
 # 2. BACK-END SERVER

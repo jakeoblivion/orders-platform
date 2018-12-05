@@ -47,6 +47,8 @@ func fetchWooOrders() []Order {
 		log.Fatal(err)
 	}
 
+	defer resp.Body.Close()
+
 	response, err2 := ioutil.ReadAll(resp.Body)
 
 	if err2 != nil {
@@ -106,6 +108,8 @@ func fetchWooItemImageUrl(itemId int) string {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer resp.Body.Close()
+
 	response, err2 := ioutil.ReadAll(resp.Body)
 	if err2 != nil {
 		log.Fatal(err)

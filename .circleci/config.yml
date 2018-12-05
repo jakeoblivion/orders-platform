@@ -55,7 +55,7 @@ jobs:
         command: env GOOS=linux GOARCH=amd64 go build -o main backend/src/orders-management/*.go
 
   deploy:
-    name: Build and Test Back-End
+    name: Build and deploy to dockerhub
     machine: true
     steps:
     - checkout
@@ -66,7 +66,7 @@ jobs:
     - run: docker build -t jakeoblivion/orders-management:$CIRCLE_BRANCH .
 
   # deploy the image
-    - run: docker push company/orders-management:$CIRCLE_BRANCH
+    - run: docker push jakeoblivion/orders-management:$CIRCLE_BRANCH
 
 #    - run:
 #        name: Create build docker image from Dockerfile
@@ -84,7 +84,7 @@ workflows:
     - test-back-end
     - deploy:
         requires:
-        - test-back-end
+        - test-front-end
         - test-back-end
         filters:
           branches:
