@@ -54,7 +54,7 @@ jobs:
         name: Build server
         command: env GOOS=linux GOARCH=amd64 go build -o main backend/src/orders-management/*.go
 
-  deploy:
+  build-and-deploy-to-dockerhub:
     name: Build and deploy to dockerhub
     machine: true
     steps:
@@ -62,30 +62,34 @@ jobs:
 
     - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
 
-  # build the application image
-    - run: docker build -t jakeoblivion/orders-management:$CIRCLE_BRANCH .
+    - run: docker build -t jakeoblivion/orders-management:latest .
 
-  # deploy the image
-    - run: docker push jakeoblivion/orders-management:$CIRCLE_BRANCH
+    - run: docker push jakeoblivion/orders-management:latest
 
-#    - run:
-#        name: Create build docker image from Dockerfile
-#        command: docker build -t jakeoblivion/orders-management .
-#
-#    - deploy:
-#        name: Temp - run docker
-#        command: docker run -p 80:3001 -t orders-mgt:latest
+  run-latest-over-ssh:
+    name: Run latest docker image
+
+    machine: true
+
+    steps:
+    - run: |
+        ssh $SSH_USER@$SSH_HOST
+        docker pull jakeoblivion/orders-management:latest
+        docker run -p 80:3001 -t jakeoblivion/orders-management:latest
 
 workflows:
   version: 2
-  build-and-deploy:
+  test-build-deploy-run:
     jobs:
     - test-front-end
     - test-back-end
-    - deploy:
+    - build-and-deploy-to-dockerhub:
         requires:
         - test-front-end
         - test-back-end
         filters:
           branches:
             only: master
+    - run-latest-over-ssh:
+        requires:
+        - build-and-deploy-to-dockerhub

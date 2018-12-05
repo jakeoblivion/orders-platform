@@ -8,6 +8,7 @@ COPY .eslintrc.js .eslintrc.js
 COPY src src
 COPY public public
 
+RUN apk add git
 RUN npm install --no-optional
 RUN npm run build
 
