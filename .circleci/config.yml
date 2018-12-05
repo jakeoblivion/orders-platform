@@ -4,16 +4,11 @@
 #
 version: 2
 jobs:
-  build-front-end:
+  test-front-end:
     name: Build and Test Front-End
     docker:
     # specify the version you desire here
     - image: circleci/node:8
-
-    # Specify service dependencies here if necessary
-    # CircleCI maintains a library of pre-built images
-    # documented at https://circleci.com/docs/2.0/circleci-images/
-    # - image: circleci/mongo:3.4.4
 
     working_directory: ~/repo
 
@@ -40,11 +35,7 @@ jobs:
         name: Run unit tests
         command: npm run test:unit
 
-    - run:
-        name: Build dist
-        command: npm run build
-
-  build-back-end:
+  test-back-end:
     name: Build and Test Back-End
 
     docker:
@@ -63,39 +54,38 @@ jobs:
         name: Build server
         command: env GOOS=linux GOARCH=amd64 go build -o main backend/src/orders-management/*.go
 
-  #build production
-#  deploy:
-#    name: Build and Test Back-End
-#    docker:
-#    - image: circleci/golang:1.10.4
-#    working_directory: ~/repo
-#
-#    steps:
-#    - checkout
-#
+  deploy:
+    name: Build and Test Back-End
+    machine: true
+    steps:
+    - checkout
+
+    - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+  # build the application image
+    - run: docker build -t jakeoblivion/orders-management:$CIRCLE_BRANCH .
+
+  # deploy the image
+    - run: docker push company/orders-management:$CIRCLE_BRANCH
+
 #    - run:
-#        name: Create build for production
-#        command: git remote add heroku https://git.heroku.com/orders-platform.git
+#        name: Create build docker image from Dockerfile
+#        command: docker build -t jakeoblivion/orders-management .
 #
-#    - add_ssh_keys:
-#        fingerprints:
-#        - 27:11:9e:a4:61:38:7f:d5:3b:30:ee:b5:67:82:5f:96
 #    - deploy:
-#        name: Deploy Master to Heroku (production)
-#        command: |
-#          if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#            git push heroku master && echo "success"
-#          fi
+#        name: Temp - run docker
+#        command: docker run -p 80:3001 -t orders-mgt:latest
 
 workflows:
   version: 2
   build-and-deploy:
     jobs:
-    - build-front-end
-    - build-back-end
-#    - deploy:
-#        requires:
-#        - build
-#        filters:
-#          branches:
-#            only: master
+    - test-front-end
+    - test-back-end
+    - deploy:
+        requires:
+        - test-back-end
+        - test-back-end
+        filters:
+          branches:
+            only: master
