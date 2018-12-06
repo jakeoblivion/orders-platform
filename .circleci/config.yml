@@ -60,25 +60,26 @@ jobs:
     steps:
     - checkout
 
-    - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-
-    - run: docker build -t jakeoblivion/orders-management:latest .
-
-    - run: docker push jakeoblivion/orders-management:latest
+    - run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASS
+        docker build -t jakeoblivion/orders-management:latest .
+        docker push jakeoblivion/orders-management:latest
 
   run-latest-over-ssh:
-    name: Run latest docker image
-
+    name: Run Latest Docker Image
     machine: true
-
     steps:
     - checkout
 
     - add_ssh_keys:
         fingerprints:
         - "5a:a2:f8:a9:12:86:e4:e0:81:a2:04:1c:8f:20:3a:53"
+        -
     - run: |
-        ssh $SSH_USER@$SSH_HOST "docker login -u $DOCKER_USER -p $DOCKER_PASS && docker pull jakeoblivion/orders-management:latest && docker run -p 80:3001 -t jakeoblivion/orders-management:latest"
+        ssh $SSH_USER@$SSH_HOST "docker login -u $DOCKER_USER -p $DOCKER_PASS &&
+        docker pull jakeoblivion/orders-management:latest &&
+        docker run -p 80:3001 -t jakeoblivion/orders-management:latest"
+#        docker stop $(docker ps -a | grep jakeoblivion/orders-management:latest | awk '{print $1}') &&
 
 workflows:
   version: 2
