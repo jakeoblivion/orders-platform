@@ -42,6 +42,7 @@ func main() {
 }
 
 func GetOrders(w http.ResponseWriter, req *http.Request) {
+	setupCredentials()
 	w.Header().Set("content-type", "application/json")
 	var orders []Order
 

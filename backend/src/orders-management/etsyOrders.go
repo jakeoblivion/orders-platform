@@ -11,8 +11,8 @@ import (
 	"time"
 )
 
-var etsyToken = oauth.AccessToken{etsyAccessToken, etsyTokenSecret, nil}
-var consumer = oauth.NewConsumer(etsyConsumerKey, etsyConsumerSecret, oauth.ServiceProvider{})
+var etsyToken oauth.AccessToken
+var consumer *oauth.Consumer
 var latestEtsyOrders = LatestEtsyItemOrders{}
 
 type LatestEtsyItemOrders struct {
@@ -47,6 +47,8 @@ type EtsyImage struct {
 }
 
 func fetchEtsyOrders() []Order {
+	etsyToken = oauth.AccessToken{etsyAccessToken, etsyTokenSecret, nil}
+	consumer = oauth.NewConsumer(etsyConsumerKey, etsyConsumerSecret, oauth.ServiceProvider{})
 	etsyOrders := EtsyOrders{}
 
 	etsyOrdesChannel := make(chan EtsyOrders)
