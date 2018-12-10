@@ -62,15 +62,6 @@ jobs:
     - checkout
 
     - run:
-        environment:
-          EBAY_REFRESH_TOKEN: $EBAY_REFRESH_TOKEN
-          EBAY_ENCODED_AUTH_CREDS: $EBAY_ENCODED_AUTH_CREDS
-          ETSY_ACCESS_TOKEN: $ETSY_ACCESS_TOKEN
-          ETSY_TOKEN_SECRET: $ETSY_TOKEN_SECRET
-          ETSY_CONSUMER_KEY: $ETSY_CONSUMER_KEY
-          ETSY_CONSUMER_SECRET: $ETSY_CONSUMER_SECRET
-          WOO_CONSUMER_KEY: $WOO_CONSUMER_KEY
-          WOO_SECRET_KEY: $WOO_SECRET_KEY
         command: |
           docker login -u $DOCKER_USER -p $DOCKER_PASS
           docker build -t jakeoblivion/orders-management:latest .
@@ -85,12 +76,23 @@ jobs:
     - add_ssh_keys:
         fingerprints:
         - "5a:a2:f8:a9:12:86:e4:e0:81:a2:04:1c:8f:20:3a:53"
-        -
-    - run: |
-        ssh $SSH_USER@$SSH_HOST "docker login -u $DOCKER_USER -p $DOCKER_PASS &&
-        docker pull jakeoblivion/orders-management:latest &&
-        docker run -p 80:3001 -t jakeoblivion/orders-management:latest"
-#        docker stop $(docker ps -a | grep jakeoblivion/orders-management:latest | awk '{print $1}') &&
+
+    - run:
+        command: |
+          ssh $SSH_USER@$SSH_HOST "docker login -u $DOCKER_USER -p $DOCKER_PASS &&
+          docker pull jakeoblivion/orders-management:latest &&
+          docker run \
+          -e EBAY_REFRESH_TOKEN=$EBAY_REFRESH_TOKEN \
+          -e EBAY_ENCODED_AUTH_CREDS=$EBAY_ENCODED_AUTH_CREDS \
+          -e ETSY_ACCESS_TOKEN=$ETSY_ACCESS_TOKEN \
+          -e ETSY_TOKEN_SECRET=$ETSY_TOKEN_SECRET \
+          -e ETSY_CONSUMER_KEY=$ETSY_CONSUMER_KEY \
+          -e ETSY_CONSUMER_SECRET=$ETSY_CONSUMER_SECRET \
+          -e WOO_CONSUMER_KEY=$WOO_CONSUMER_KEY \
+          -e WOO_SECRET_KEY=$WOO_SECRET_KEY \
+          --restart=always \
+          -p 80:3001 \
+          -t jakeoblivion/orders-management:latest" \
 
 workflows:
   version: 2
