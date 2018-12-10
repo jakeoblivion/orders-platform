@@ -57,13 +57,24 @@ jobs:
   build-and-deploy-to-dockerhub:
     name: Build and deploy to dockerhub
     machine: true
+
     steps:
     - checkout
 
-    - run: |
-        docker login -u $DOCKER_USER -p $DOCKER_PASS
-        docker build -t jakeoblivion/orders-management:latest .
-        docker push jakeoblivion/orders-management:latest
+    - run:
+        environment:
+          EBAY_REFRESH_TOKEN: $EBAY_REFRESH_TOKEN
+          EBAY_ENCODED_AUTH_CREDS: $EBAY_ENCODED_AUTH_CREDS
+          ETSY_ACCESS_TOKEN: $ETSY_ACCESS_TOKEN
+          ETSY_TOKEN_SECRET: $ETSY_TOKEN_SECRET
+          ETSY_CONSUMER_KEY: $ETSY_CONSUMER_KEY
+          ETSY_CONSUMER_SECRET: $ETSY_CONSUMER_SECRET
+          WOO_CONSUMER_KEY: $WOO_CONSUMER_KEY
+          WOO_SECRET_KEY: $WOO_SECRET_KEY
+        command: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASS
+          docker build -t jakeoblivion/orders-management:latest .
+          docker push jakeoblivion/orders-management:latest
 
   run-latest-over-ssh:
     name: Run Latest Docker Image
