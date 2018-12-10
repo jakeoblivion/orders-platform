@@ -20,7 +20,7 @@ export default {
     OrderQuantity,
     TotalOrders,
     Order,
-    ShippingOptions,
+    ShippingOptions
   },
   methods: {
     calculateTotalOrders() {
@@ -35,37 +35,42 @@ export default {
     },
     hidePlatformOrders(platformClicked) {
       this.platforms.map(item => {
-        item.platform === platformClicked ? item.hidden = false : item.hidden = true
-      })
+        item.platform === platformClicked
+          ? (item.hidden = false)
+          : (item.hidden = true);
+      });
     },
     showAllOrders() {
-        this.platforms.map(item => {
-            item.hidden = false
-        })
+      this.platforms.map(item => {
+        item.hidden = false;
+      });
     },
-      sortOrdersByShipByDate(orders) {
-      return orders.sort((a,b) => {
-              return new Date(a.shipByDate) - new Date(b.shipByDate)
-          })
-      }
+    sortOrdersByShipByDate(orders) {
+      return orders.sort((a, b) => {
+        return new Date(a.shipByDate) - new Date(b.shipByDate);
+      });
+    }
   },
   data() {
     return {
       platforms: [
-        { hidden: false, platform: PlatformConstants.ETSY},
-        { hidden: false, platform: PlatformConstants.EBAY},
-        { hidden: false, platform: PlatformConstants.WOO },
+        { hidden: false, platform: PlatformConstants.ETSY },
+        { hidden: false, platform: PlatformConstants.EBAY },
+        { hidden: false, platform: PlatformConstants.WOO }
       ],
-      orders: [],
+      orders: []
     };
   },
   mounted() {
     axios
       .get("/get-orders")
-      .then(response => (this.orders = this.sortOrdersByShipByDate(response.data) || []))
-      .catch(err => console.log(err))
+      .then(
+        response =>
+          (this.orders = this.sortOrdersByShipByDate(response.data) || [])
+      )
+      .catch(err => console.log(err));
   }
-}
+};
 </script>
 
 <template>
@@ -76,14 +81,18 @@ export default {
     <main>
       <div class="orderQuantityContainer md-layout md-gutter md-alignment-center">
         <TotalOrders @click.native=showAllOrders :quantity=calculateTotalOrders() />
-        <OrderQuantity @click.native=hidePlatformOrders(item.platform) v-for="item in platforms" :platform="item.platform" :quantity=getOrderQuantityForPlatform(item.platform) />
+        <OrderQuantity @click.native=hidePlatformOrders(item.platform)
+                       v-for="item in platforms"
+                       :key="item.platform"
+                       :platform="item.platform"
+                       :quantity=getOrderQuantityForPlatform(item.platform)
+        />
       </div>
       <h1 class="ordersHeading">ORDERS</h1>
       <div class="ordersContainer md-layout md-gutter">
-        <Order :class="[{'hidden': platforms.find(item => item.platform === order.platform).hidden}]" v-for="order in orders" :orderDetails="order" />
+        <Order :class="[{'hidden': platforms.find(item => item.platform === order.platform).hidden}]" v-for="order in orders" :key="order.shippingAddress.addressLine" :orderDetails="order" />
       </div>
       <ShippingOptions v-if="!!orders.length" />
-
     </main>
   </div>
 </template>

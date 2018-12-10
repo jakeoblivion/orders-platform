@@ -1,5 +1,5 @@
 <template>
-  <div class="md-layout">
+  <div class="md-layout shippingOptions">
     <div class="shippingOption md-layout-item md-large-size-33 md-medium-size-33 md-small-size-100">
       <a href="https://business.parcel.royalmail.com/orders/" target="_blank">
         <div class="shipping-link">
@@ -29,41 +29,40 @@
 
 <script>
 export default {
-  name: "ShippingOptions",
+  name: "ShippingOptions"
 };
 </script>
 
 <style scoped>
-  .shippingOption    {
-    margin-top: 24px;
-  }
+.shippingOption {
+  margin-top: 24px;
+}
 
-  .shipping-link {
-    border: solid 1px rgb(191, 191, 191);
-    border-radius: 20px;
-    background: rgb(155, 181, 172);
-    position: relative;
-    display: inline-block;
-    width: calc(100% - 30px);
-    text-align: center;
-    min-height: 175px;
-  }
+.shipping-link {
+  border: solid 1px rgb(191, 191, 191);
+  border-radius: 20px;
+  background: rgb(155, 181, 172);
+  position: relative;
+  display: inline-block;
+  width: calc(100% - 30px);
+  text-align: center;
+  min-height: 175px;
+}
 
-  .shipping-link img {
-    margin: 0 auto;
-    padding: 10px 25px;
-    max-width: 100%;
-    max-height: 80px;
-    display: block;
-  }
+.shipping-link img {
+  margin: 0 auto;
+  padding: 10px 25px;
+  max-width: 100%;
+  max-height: 80px;
+  display: block;
+}
 
-  .shipping-link {
-    font-size: 28px;
-    color: #2c3e50;
-  }
+.shipping-link {
+  font-size: 28px;
+  color: #2c3e50;
+}
 
-  .shipping-link:hover {
-    color: white;
-  }
-
+.shipping-link:hover {
+  color: white;
+}
 </style>

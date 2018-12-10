@@ -3,7 +3,7 @@
     <md-card class="orderQuantityContainer center primaryBackground cursor">
       <md-card-header>
         <div class="md-title">
-          Total Orders
+          <img class="totalOrders" src="../assets/total-orders.png" >
         </div>
       </md-card-header>
       <md-card-content class=orderQuantityNumber>
@@ -25,11 +25,16 @@ export default {
 <style scoped>
 .orderQuantityContainer {
   margin-top: 8px;
-  padding: 12px;
 }
 
 .orderQuantityNumber {
   font-size: 40px;
   padding-top: 5px;
+}
+
+.totalOrders {
+  width: 100px;
+  padding: 5px;
+  max-width: 100%;
 }
 </style>

@@ -20,7 +20,7 @@ export default {
   props: {
     platform: String,
     quantity: Number
-  },
+  }
 };
 </script>
 

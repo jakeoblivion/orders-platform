@@ -11,6 +11,36 @@ body {
   background: #f3f3f3;
 }
 
+@media print {
+  div {
+    font-size: 8px !important;
+    line-height: initial;
+  }
+  .shippingOptions, .orderQuantityContainer, .logoContainer, .platformImg {
+    display: none !important;
+  }
+  .orderItemImg {
+    max-width: 50px !important;
+    height: 50px !important;
+  }
+  .order,.orderContent {
+    flex: 0 1 49% !important;
+    min-width: 49% !important;
+    padding: 2px !important;
+    margin: 2px !important;
+  }
+
+  .shipByDate {
+    padding-top: 0px !important;
+  }
+  .shippingAddress {
+    padding: 4px 2px 2px !important;
+  }
+  .shippingAddress {
+    margin: 0 !important;
+  }
+}
+
 .md-layout.md-gutter>.md-layout-item {
   padding-right: 10px;
   padding-left: 10px;

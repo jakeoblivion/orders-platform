@@ -1,9 +1,9 @@
 <template xmlns:src="http://www.w3.org/1999/xhtml">
-  <div class="order md-layout-item md-large-size-50 md-medium-size-50 md-small-size-100" v-bind:class=orderDetails.platform>
+  <div class="order md-layout-item md-xlarge-size-50 md-large-size-50 md-medium-size-50 md-small-size-100" v-bind:class=orderDetails.platform>
     <md-card class="lightgreybg">
       <md-card-content class="md-layout p0">
         <div class="md-layout-item md-size-66">
-          <div class="md-layout" v-for="orderItem of orderDetails.orderItems">
+          <div class="md-layout" v-for="orderItem in orderDetails.orderItems" :key="orderItem.itemName">
             <div class="md-layout-item md-size-40">
               <img class="orderItemImg" :src="orderItem.imageUrl" />
             </div>
@@ -41,18 +41,18 @@ export default {
     orderDetails: {}
   },
   methods: {
-    isOverdue: function (date) {
-      return new Date(date) < new Date()
-    },
+    isOverdue: function(date) {
+      return new Date(date) < new Date();
+    }
   }
-}
+};
 </script>
 
 <style scoped>
-    .order {
-        padding-top: 8px;
-        padding-bottom: 8px;
-    }
+.order {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
 
 .orderTitle {
   font-size: 16px;
@@ -64,18 +64,18 @@ export default {
   font-weight: 800;
   font-size: 20px;
   top: 4px;
-    left: 4px;
+  left: 4px;
   padding-right: 4px;
   position: relative;
 }
 
 .shipByDate {
-    padding-top: 8px;
-    font-weight: bold;
+  padding-top: 8px;
+  font-weight: bold;
 }
 
 .orange {
-    color: orangered;
+  color: orangered;
 }
 
 .orderedDate {
@@ -87,7 +87,7 @@ export default {
   border-radius: 4px;
   padding: 5px;
   margin-bottom: 5px;
-    margin-left: -5px;
+  margin-left: -5px;
   background: white;
   display: inline-block;
 }
@@ -98,8 +98,8 @@ export default {
 }
 
 .orderItemImg {
-  width: 100%  ;
-    max-width: 200px;
+  width: 100%;
+  max-width: 200px;
 }
 
 .orderContent {
