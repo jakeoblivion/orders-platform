@@ -80,6 +80,8 @@ jobs:
     - run:
         command: |
           ssh $SSH_USER@$SSH_HOST "docker login -u $DOCKER_USER -p $DOCKER_PASS &&
+          docker stop $(docker ps -a --filter name= jakeoblivion/orders-management:latest -q ) || true &&
+          docker rmi -f $(docker ps -a --filter name= jakeoblivion/orders-management:latest -q) || true &&
           docker pull jakeoblivion/orders-management:latest &&
           docker run \
           -e EBAY_REFRESH_TOKEN=$EBAY_REFRESH_TOKEN \
