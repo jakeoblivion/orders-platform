@@ -2,6 +2,7 @@
 <script>
 import OrderQuantity from "./components/OrderQuantity.vue";
 import TotalOrders from "./components/TotalOrders.vue";
+import LoadingSpinner from "./components/LoadingSpinner.vue";
 import Order from "./components/Order.vue";
 import ShippingOptions from "./components/ShippingOptions.vue";
 import PlatformConstants from "./platformConstants";
@@ -20,6 +21,7 @@ export default {
     OrderQuantity,
     TotalOrders,
     Order,
+    LoadingSpinner,
     ShippingOptions
   },
   methods: {
@@ -58,23 +60,29 @@ export default {
         { hidden: false, platform: PlatformConstants.EBAY },
         { hidden: false, platform: PlatformConstants.WOO }
       ],
-      orders: []
+      orders: [],
+      loading: false
     };
   },
   mounted() {
+    this.loading = true;
     axios
       .get("/get-orders")
-      .then(
-        response =>
-          (this.orders = this.sortOrdersByShipByDate(response.data) || [])
-      )
-      .catch(err => console.log(err));
+      .then(response => {
+        this.loading = false;
+        this.orders = this.sortOrdersByShipByDate(response.data) || [];
+      })
+      .catch(err => {
+        this.loading = false;
+        console.log(err);
+      });
   }
 };
 </script>
 
 <template>
   <div id="app">
+  <LoadingSpinner v-if="this.loading" />
     <nav class="logoContainer">
       <img class="logo" src="./assets/logo.jpg">
     </nav>
