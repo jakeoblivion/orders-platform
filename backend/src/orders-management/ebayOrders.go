@@ -9,6 +9,9 @@ import (
 type EbayOrders struct {
 	Total  int `json:"total"`
 	Orders []struct {
+	  CancelStatus  struct {
+	   CancelledDate string `json:cancelledDate`
+	  } `json:cancelStatus`
 		OrderID        string    `json:"orderId"`
 		LegacyOrderID  string    `json:"legacyOrderId"`
 		CreationDate   time.Time `json:"creationDate"`
@@ -77,7 +80,14 @@ func fetchEbayOrders() []Order {
 
 func (eo EbayOrders) OrdersAdapter() []Order {
 	var orders []Order
+
 	for _, ebayOrder := range eo.Orders {
+
+	  //skip cancelled orders
+    if(ebayOrder.CancelStatus.CancelledDate != "") {
+      continue
+    }
+
 		var orderItems []OrderItem
 		for _, ebayOrderItem := range ebayOrder.OrderItems {
 			orderItems = append(orderItems, OrderItem{
